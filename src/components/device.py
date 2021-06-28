@@ -3,6 +3,7 @@ import logging
 import random
 import threading
 import time
+import json
 
 __all__ = ['Device']
 logger = logging.getLogger(__name__)
@@ -21,13 +22,15 @@ class Device(threading.Thread):
         self._access_token = access_token
         self._refresh_token = refresh_token
         self._delay = delay
-
         self._device = None
 
     def _send_data(self):
+        body = {"device_name": self._device_name,
+                "temp": random.randint(10, 15)}
+        headers = {"Content-Type": "application/json",
+                   "Authorization": "Bearer " + self._access_token}
         try:
-            requests.post(self._url,
-                          json={"device_name": self._device_name, "temp": random.randint(10, 15)}, headers={"Content-Type": "application/json"})
+            requests.post(self._url, data=json.dumps(body), headers=headers)
         except(Exception):
             logger.info(Exception)
 
