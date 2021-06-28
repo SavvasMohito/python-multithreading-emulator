@@ -3,7 +3,7 @@ import json
 from components.supervisor import Supervisor
 
 # Read configuration attributes from the config.json file
-file = open('components/config.json', 'r')
+file = open('config/config.json', 'r')
 config = json.load(file)
 file.close()
 

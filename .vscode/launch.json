@@ -8,7 +8,7 @@
 			"name": "Device Emulator",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}/run.py",
+			"program": "${workspaceFolder}/src/run.py",
 			"console": "integratedTerminal"
 		},
 		{
