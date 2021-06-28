@@ -7,7 +7,7 @@ RUN apt-get install python3 -y
 RUN apt-get install python3-pip -y
 RUN npm install -g npm@7.11.1
 
-# Install Python Module
+# Install Python Modules
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 

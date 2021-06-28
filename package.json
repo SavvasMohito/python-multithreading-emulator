@@ -1,4 +1,9 @@
 {
+  "name": "python-device-emulator",
+  "version": "1.0.0",
+  "description": "Python Threading Device Emulator",
+  "author": "Savvas Mantzouranidis",
+  "main": "test-server.js",
   "dependencies": {
     "express": "^4.17.1"
   }
