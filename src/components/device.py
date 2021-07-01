@@ -31,7 +31,7 @@ class Device(threading.Thread):
                    'Authorization': 'Bearer ' + self._access_token}
         try:
             requests.post(
-                self._url, data=json.dumps(body), headers=headers, verify=False)
+                self._url, data=json.dumps(body), headers=headers, verify="cert.pem")
         except(Exception):
             logger.info(Exception)
 

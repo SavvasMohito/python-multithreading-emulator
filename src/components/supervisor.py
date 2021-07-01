@@ -1,6 +1,7 @@
 import threading
 import time
 import logging
+import urllib.request
 
 from .device import Device
 
@@ -48,6 +49,11 @@ class Supervisor(object):
         start_time = time.time()
         self._is_running = True
         try:
+            # Retrieve ssl certificate from the http /download endpoint
+            urllib.request.urlretrieve(
+                "http://172.24.1.14/download", "cert.pem")
+
+            # Create the device spawner thread
             spawner = threading.Thread(
                 target=self._create_devices, name='Spawner')
             spawner.setDaemon(True)
