@@ -27,10 +27,11 @@ class Device(threading.Thread):
     def _send_data(self):
         body = {"device_name": self._device_name,
                 "temp": random.randint(10, 15)}
-        headers = {"Content-Type": "application/json",
-                   "Authorization": "Bearer " + self._access_token}
+        headers = {'Content-Type': 'application/json',
+                   'Authorization': 'Bearer ' + self._access_token}
         try:
-            requests.post(self._url, data=json.dumps(body), headers=headers)
+            requests.post(
+                self._url, data=json.dumps(body), headers=headers, verify=False)
         except(Exception):
             logger.info(Exception)
 
