@@ -5,8 +5,9 @@ app.use(express.json());
 
 app.post("/posts", (req, res) => {
   //console.log(JSON.stringify(req.body));
+  console.log(req.headers["authorization"]);
   console.log(req.body);
-  res.send("OK");
+  res.send("ACCESS GRANTED! TOKEN IS VALID.");
 });
 
 const port = process.env.PORT || 3333;
