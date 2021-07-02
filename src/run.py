@@ -13,10 +13,10 @@ def get_arguments():
         config = json.load(file)
         file.close()
 
-        # access_token = get_access_token(config["user_id"])
-        # if access_token is not False:
-        args = [config["devices"], config["url"],
-                config["device_name"], config["access_token"], config["refresh_token"], config["delay"]]
+        access_token = get_access_token(config["user_id"])
+        if access_token is not False:
+            args = [config["devices"], config["url"],
+                    config["device_name"], config["access_token"], config["refresh_token"], config["delay"]]
     except Exception:
         logging.info(Exception)
 
@@ -30,13 +30,16 @@ def get_access_token(user_id):
     access_token = False
 
     try:
-        client = MongoClient('172.24.1.5', 27017, serverSelectionTimeoutMS=10,
-                             connectTimeoutMS=20000)
-        # specify users collection
-        # search for users.userID = user_id in the collection
-        # set access_token = found user's access_token
+        client = MongoClient("mongodb://172.24.1.5:27017/")
+        #DB name
+        db = client["iotUsers"]
+        #Collection
+        coll = db["users"]
+        x = coll.find_one({"id":user_id} )
+        access_token=x["token"][0]["access_token"]
     except Exception:
         logging.info(Exception)
+
 
     return access_token
 
