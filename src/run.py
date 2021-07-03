@@ -16,7 +16,9 @@ def get_arguments():
         access_token = get_access_token(config["user_id"])
         if access_token is not False:
             args = [config["devices"], config["url"],
-                    config["device_name"], config["access_token"], config["refresh_token"], config["delay"]]
+                    config["device_name"], access_token, config["delay"]]
+        else:
+            logging.info("user_id invalid or access_token not found.")
     except Exception:
         logging.info(Exception)
 
@@ -24,22 +26,19 @@ def get_arguments():
 
 
 def get_access_token(user_id):
-    # TODO make a mongo connection
-    # retrieve access_token based on given user_id
-    # return access_token value
     access_token = False
 
     try:
         client = MongoClient("mongodb://172.24.1.5:27017/")
-        #DB name
+        # DB name
         db = client["iotUsers"]
-        #Collection
+        # Collection
         coll = db["users"]
-        x = coll.find_one({"id":user_id} )
-        access_token=x["token"][0]["access_token"]
+        x = coll.find_one({"id": user_id})
+        if x["token"]:
+            access_token = x["token"][0]["access_token"]
     except Exception:
         logging.info(Exception)
-
 
     return access_token
 

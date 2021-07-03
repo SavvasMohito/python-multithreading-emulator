@@ -10,13 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 class Supervisor(object):
-    def __init__(self, ndevices, url, device_name, access_token=None, refresh_token=None, delay=1.):
+    def __init__(self, ndevices, url, device_name, access_token=None, delay=1.):
 
         self._ndevices = ndevices
         self._device_kwargs = {
             'url': url,
             'access_token': access_token,
-            'refresh_token': refresh_token,
             'device_name': device_name,
             'supervisor': self,
             # Maybe add this in the future
