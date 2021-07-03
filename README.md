@@ -6,15 +6,17 @@ It is recommended to run it using the Docker Container functionallity in order t
 
 ## How to use
 
-1. Build and Run the main [oauth2-testing project](https://github.com/SavvasMohito/oauth2-testing/tree/wip/docker-compose) using Docker. Specific instructions about this step can be found in the project's README.
+1. Modify the [nginx template file](https://github.com/SavvasMohito/oauth2-testing/blob/wip/docker-compose/config/nginx-templates/default.conf.template) in the oauth2-testing project. Specifically, make changes to [this](https://github.com/SavvasMohito/oauth2-testing/blob/wip/docker-compose/config/nginx-templates/default.conf.template#L54-L60) block of code, following the commented-out instructions.
 
-2. Log in to [kratos-dashboard](https://172.24.1.14/) and go to the userTokens subpage (lock (🔒) symbol on the navigation bar). Make sure the user has an active access_token. If not, click the link shown in the page to get a new one.
+2. Build and Run the main [oauth2-testing project](https://github.com/SavvasMohito/oauth2-testing/tree/wip/docker-compose) using Docker. Specific instructions about this step can be found in the project's README.
 
-3. Copy the User ID found in the userTokens subpage above the access token information and paste it in the `user_id` field in the emulator's config.json file.
+3. Log in to [kratos-dashboard](https://172.24.1.14/) and go to the userTokens subpage (lock (🔒) symbol on the navigation bar). Make sure the user has an active access_token. If not, click the link shown in the page to get a new one.
 
-4. Run the "Test Data Collector" executable which is used as a test receiver server of the http requests and prints the access token and request body in the terminal.
+4. Copy the User ID found in the userTokens subpage above the access token information and paste it in the `user_id` field in the emulator's config.json file.
 
-5. Run the "Device Emulator" executable which starts the emulation based on the configuration found in the config.json file. The devices created send http requests to the Data Collector.
+5. Run the "Test Data Collector" executable which is used as a test receiver server of the http requests and prints the access token and request body in the terminal.
+
+6. Run the "Device Emulator" executable which starts the emulation based on the configuration found in the config.json file. The devices created send http requests to the Data Collector.
 
 ## Configuration
 
