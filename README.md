@@ -6,11 +6,15 @@ It is recommended to run it using the Docker Container functionallity in order t
 
 ## How to use
 
-You can run the two executables via the VS Code debug tab.
+1. Build and Run the main [oauth2-testing project](https://github.com/SavvasMohito/oauth2-testing/tree/wip/docker-compose) using Docker. Specific instructions about this step can be found in the project's README.
 
-1. "Test Data Collector" is used as the receiver server of the http requests and prints the request body in the terminal.
+2. Log in to [kratos-dashboard](https://172.24.1.14/) and go to the userTokens subpage (lock (🔒) symbol on the navigation bar). Make sure the user has an active access_token. If not, click the link shown in the page to get a new one.
 
-2. "Device Emulator" is running based on the configuration found in the config.json file. The devices created are sending http requests to the Data Collector.
+3. Copy the User ID found in the userTokens subpage above the access token information and paste it in the `user_id` field in the emulator's config.json file.
+
+4. Run the "Test Data Collector" executable which is used as a test receiver server of the http requests and prints the access token and request body in the terminal.
+
+5. Run the "Device Emulator" executable which starts the emulation based on the configuration found in the config.json file. The devices created send http requests to the Data Collector.
 
 ## Configuration
 
@@ -20,10 +24,9 @@ The config.json file contains all the configuration attributes (described below)
 
 * `devices` Number of devices to simulate. Default is 1.
 * `url` (**required**) Server url in format 'http://server.name/api/rest'. It is used as an HTTP request target by the Device object.
-* `delay` Delay between messages in seconds. Default is 1.
 * `device_name` Device name prefix. Default is "iot-device-".
-* `access_token` Authentication access token.
-* `refresh_token` Authentication refresh token.
+* `user_id` (**required**) The id of the user that we want to run the emulator for. Can be found in kratos-dashboard homepage (after logging in) or in mongo db.
+* `delay` Delay between messages in seconds. Default is 1.
 
 ### Additional DeviceHive arguments (not implemented)
 
