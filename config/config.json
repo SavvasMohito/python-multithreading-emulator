@@ -2,6 +2,6 @@
   "devices": 1,
   "url": "https://172.24.1.14/api/data",
   "device_name": "iot-device-",
-  "user_id": "",
+  "user_id": "c7dbb0e4-6219-4c62-a042-8667b8347e11",
   "delay": 2
 }

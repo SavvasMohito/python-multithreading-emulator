@@ -24,22 +24,23 @@ class Device(threading.Thread):
         self._device = None
 
     def _send_data(self):
-        body = {"device_name": self._device_name,
+        body = {"id": self._device_name,
                 "temp": random.randint(10, 15)}
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer {}'.format(self._access_token)}
         try:
             response = requests.post(
-                self._url, data=json.dumps(body), headers=headers, verify="cert.pem")
+                "{}{}".format(self._url,"/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
             if (response.status_code == 403):
                 # TODO: handle token expiration
                 # change self._url to /getNewToken
                 response = requests.post(
-                self._url, data=json.dumps(body), headers=headers, verify="cert.pem")
-                #self._access_token=response.body
+                "{}{}".format(self._url,"/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
+                self._access_token=response.text
                 pass
         except(Exception):
             logger.info(Exception)
+        
 
     def run(self):
         try:
