@@ -29,8 +29,11 @@ class Device(threading.Thread):
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer ' + self._access_token}
         try:
-            requests.post(
+            response = requests.post(
                 self._url, data=json.dumps(body), headers=headers, verify="cert.pem")
+            if (response.status_code == 403):
+                # TODO: handle token expiration
+                pass
         except(Exception):
             logger.info(Exception)
 
