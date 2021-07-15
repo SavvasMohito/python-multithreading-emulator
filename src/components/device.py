@@ -30,17 +30,14 @@ class Device(threading.Thread):
                    'Authorization': 'Bearer {}'.format(self._access_token)}
         try:
             response = requests.post(
-                "{}{}".format(self._url,"/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
+                "{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
             if (response.status_code == 403):
-                # TODO: handle token expiration
-                # change self._url to /getNewToken
+                # handle token expiration
                 response = requests.post(
-                "{}{}".format(self._url,"/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
-                self._access_token=response.text
-                pass
+                    "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
+                self._access_token = response.text
         except(Exception):
             logger.info(Exception)
-        
 
     def run(self):
         try:
