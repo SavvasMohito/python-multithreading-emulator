@@ -12,6 +12,13 @@
 			"console": "integratedTerminal"
 		},
 		{
+			"name": "Kratos User Creator",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/test2.py",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "Test Data Collector",
 			"type": "node",
 			"request": "launch",
