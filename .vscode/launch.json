@@ -19,6 +19,13 @@
 			"console": "integratedTerminal"
 		},
 		{
+			"name": "Hydra User tokenCreator",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/test3.py",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "Test Data Collector",
 			"type": "node",
 			"request": "launch",
