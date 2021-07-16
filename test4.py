@@ -1,11 +1,8 @@
 import requests
 from requests.auth import HTTPBasicAuth
 from urllib.request import urlretrieve
-from urllib.request import urlretrieve
 from urllib.parse import parse_qs
 import json
-import os
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 file = open('/var/lib/cert-storage/hydraClient.json', 'r')
 clientinfo = json.load(file)
