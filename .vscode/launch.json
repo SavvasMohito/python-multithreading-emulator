@@ -22,7 +22,7 @@
 			"name": "Hydra User tokenCreator",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}/test3.py",
+			"program": "${workspaceFolder}/test4.py",
 			"console": "integratedTerminal"
 		},
 		{

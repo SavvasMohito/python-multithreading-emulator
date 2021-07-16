@@ -3,11 +3,10 @@ const app = express();
 
 app.use(express.json());
 
-app.post("/posts", (req, res) => {
+app.get("/callback", (req, res) => {
   //console.log(JSON.stringify(req.body));
-  console.log(req.headers["authorization"]);
-  console.log(req.body);
-  res.send("ACCESS GRANTED! TOKEN IS VALID.");
+  console.log(req);
+  res.send(req.url);
 });
 
 const port = process.env.PORT || 3333;

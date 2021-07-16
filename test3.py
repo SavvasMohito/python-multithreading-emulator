@@ -8,8 +8,8 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 # This information is obtained upon registration of a new GitHub
 client_id = "cc-client"
 client_secret = "2WJo0S-Nn~QmKRMLeu5m-MbxbM"
-authorization_base_url = 'http://172.24.1.14/hydra/oauth2/auth'
-token_url = 'http://172.24.1.14/hydra/oauth2/token'
+authorization_base_url = 'https://172.24.1.14/hydra/oauth2/auth'
+token_url = 'https://172.24.1.14/hydra/oauth2/token'
 
 # Retrieve ssl certificate from the http /download endpoint
 urlretrieve("http://172.24.1.14/download", "cert.pem")
@@ -18,11 +18,10 @@ headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 # replace userTokens with device-manager internal endpoint OR implement login flow
 state="aW90LTVnLWNyZXc"
 response_type="code"
-hydra_req_url="http://172.24.1.14/hydra/oauth2/auth?client_id=cc-client&redirect_uri=https://172.24.1.14/userTokens&response_type=code&scope=offline_access&state=aW90LTVnLWNyZXc"
+hydra_req_url="https://172.24.1.14/hydra/oauth2/auth?client_id=cc-client&redirect_uri=https://172.24.1.14/userTokens&response_type=code&scope=offline_access&state=aW90LTVnLWNyZXc"
 response = requests.get(hydra_req_url, data="", headers=headers, verify="cert.pem")
 hydraClient = OAuth2Session(client_id, state=state)
-token = hydraClient.fetch_token(token_url, client_secret=client_secret,
-                            authorization_response=response_type)
+token = hydraClient.fetch_token(token_url, client_secret=client_secret, authorization_response=response_type)
 # MismatchingStateError (mismatching_state) CSRF Warning! State not equal in request and response.
 exit()
 
