@@ -26,6 +26,13 @@
 			"console": "integratedTerminal"
 		},
 		{
+			"name": "Kratos User login",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/test5.py",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "Test Data Collector",
 			"type": "node",
 			"request": "launch",
