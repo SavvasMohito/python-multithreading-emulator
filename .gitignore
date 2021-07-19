@@ -109,3 +109,4 @@ __pycache__/
 
 # SSL Certificate
 cert.pem
+config/registeredUsers.json

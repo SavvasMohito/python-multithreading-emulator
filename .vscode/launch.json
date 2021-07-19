@@ -33,6 +33,20 @@
 			"console": "integratedTerminal"
 		},
 		{
+			"name": "User devices generator",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/test6.py",
+			"console": "integratedTerminal"
+		},
+		{
+			"name": "User Token generator",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/test9.py",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "Test Data Collector",
 			"type": "node",
 			"request": "launch",
