@@ -40,9 +40,6 @@ file = open('/var/lib/cert-storage/hydraClient.json', 'r')
 clientinfo = json.load(file)
 file.close()
 
-# Download SSL Certificate
-#urlretrieve("http://172.24.1.14/download", "cert.pem")
-
 # Set Hydra Client Info
 client_id = clientinfo["confClient"]["client_id"]
 client_secret = clientinfo["confSecret"]["client_secret"]
@@ -54,7 +51,7 @@ code_url = "https://172.24.1.14/hydra/oauth2/auth?client_id={}&redirect_uri={}&r
 headers = {
 	'Authorization': 'Bearer {}'.format(session_token)
 }
-response = requests.get(code_url,headers=headers, verify="cert.pem")
+response = requests.get(code_url, headers=headers, verify="cert.pem")
 queryElements=parse_qs(response.text)
 code=queryElements['/callback?code'][0]
 
