@@ -13,7 +13,7 @@ registration_url = "https://172.24.1.14/kratos/self-service/registration/api"
 with open('config/names.json', 'r') as infile:
     user_names = json.load(infile)
 
-# Load Hydra Client info
+# Load Emulator Config
 with open('config/config.json', 'r') as infile:
     emulator_settings = json.load(infile)
 
