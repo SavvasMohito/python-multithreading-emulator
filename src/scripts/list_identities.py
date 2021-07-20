@@ -1,6 +1,7 @@
+from pprint import pprint
+
 import ory_kratos_client
 from ory_kratos_client.api import v0alpha1_api
-from pprint import pprint
 
 # Set Kratos Admin endpoint url
 configuration = ory_kratos_client.Configuration(

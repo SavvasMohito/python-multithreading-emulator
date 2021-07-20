@@ -1,10 +1,11 @@
-import requests
 import json
-from urllib.request import urlretrieve
-from requests.auth import HTTPBasicAuth
 from urllib.parse import parse_qs
+from urllib.request import urlretrieve
+
+import requests
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
+from requests.auth import HTTPBasicAuth
 
 # Download SSL Certificate
 urlretrieve("http://172.24.1.14/download", "cert.pem")
@@ -82,8 +83,8 @@ for user_identity in userCredentials:
 
   token = json.loads(response.text)
   print(token)
-  # TODO: add token to mongo with user details 
-  # i.e. mongo find(id) push user
+  
+  # Add users and their tokens in mongo
   userEntry = {}
   userFilter={"id":  user_identity["user_id"]}
   userEntry.update({"id":  user_identity["user_id"]})

@@ -14,4 +14,6 @@
    3. Make initial access token request
    4. Start the device emulation</s>
 
-6. Store created users' data and access token in mongo
+6. <s>Store created users' data and access token in mongo</s>
+
+Done!

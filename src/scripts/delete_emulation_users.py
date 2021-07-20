@@ -1,6 +1,7 @@
+import json
+
 import ory_kratos_client
 from ory_kratos_client.api import v0alpha1_api
-import json
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 

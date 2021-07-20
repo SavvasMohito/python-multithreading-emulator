@@ -1,6 +1,7 @@
 import json
 import secrets
 from urllib.request import urlretrieve
+
 import requests
 
 # Download SSL Certificate
