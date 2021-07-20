@@ -3,6 +3,8 @@ import json
 from urllib.request import urlretrieve
 from requests.auth import HTTPBasicAuth
 from urllib.parse import parse_qs
+from pymongo import MongoClient
+from pymongo.errors import ServerSelectionTimeoutError
 
 # Download SSL Certificate
 urlretrieve("http://172.24.1.14/download", "cert.pem")
@@ -27,6 +29,20 @@ token_url = "https://172.24.1.14/hydra/oauth2/token"
 userCredentials=[]
 with open('config/registeredUsers.json', 'r') as infile:
     userCredentials = json.load(infile)
+
+localClient = MongoClient(
+    "mongodatabasehost",
+    27017,
+    serverSelectionTimeoutMS=10,
+    connectTimeoutMS=20000,
+)
+# Check connectivity
+try:
+  localClient.server_info()
+except ServerSelectionTimeoutError:
+  print("local server is down.")
+  exit()
+dbCollection = localClient["iotUsers"]["users"]   
 
 for user_identity in userCredentials:
   
@@ -64,8 +80,15 @@ for user_identity in userCredentials:
   'Authorization': 'Bearer {}'.format(session_token)}
   response = requests.post(token_url, auth=HTTPBasicAuth(client_id, client_secret), data=payload, headers=headers, verify="cert.pem")
 
-  token = response.text
+  token = json.loads(response.text)
   print(token)
   # TODO: add token to mongo with user details 
   # i.e. mongo find(id) push user
+  userEntry = {}
+  userEntry.update({"id":  user_identity["user_id"]})
+  userEntry.update({"token":  [token]})
+  #testDocument = list(dbCollection.find(userEntry))
+  #if not testDocument:
+  dbCollection.insert_one(userEntry)
   
+localClient.close()

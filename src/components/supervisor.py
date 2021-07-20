@@ -2,8 +2,9 @@ import threading
 import time
 import logging
 import urllib.request
-
+from pymongo import MongoClient
 from .device import Device
+import json
 
 __all__ = ['Supervisor']
 logger = logging.getLogger(__name__)
@@ -24,7 +25,24 @@ class Supervisor(object):
         }
         self._is_running = False
         self._devices = []
+    
+    # Get access token for each user name
+    def get_access_token(self,user_id):
+        access_token = False
 
+        try:
+            client = MongoClient("mongodb://172.24.1.5:27017/")
+            # DB name
+            db = client["iotUsers"]
+            # Collection
+            coll = db["users"]
+            x = coll.find_one({"id": user_id})
+            if x["token"]:
+                access_token = x["token"][0]["access_token"]
+        except Exception:
+            logging.info(Exception)
+
+        return access_token
     @property
     def is_running(self):
         return self._is_running
@@ -35,11 +53,20 @@ class Supervisor(object):
 
     def _create_devices(self):
         logger.info('Creating Devices...')
-        for i in range(self._ndevices):
-            device = Device(thread_index=i, **self._device_kwargs)
-            device.setDaemon(True)
-            device.start()
-            self._devices.append(device)
+        #for j in range (self._nusers):
+        userCredentials=[]
+        j=0
+        with open('config/registeredUsers.json', 'r') as infile:
+            userCredentials = json.load(infile)
+        for user_identity in userCredentials:
+            user_id=user_identity["user_id"]
+            self._device_kwargs["access_token"]=self.get_access_token(user_id)
+            for i in range(self._ndevices):
+                device = Device(thread_index=j, **self._device_kwargs)
+                j=j+1
+                device.setDaemon(True)
+                device.start()
+                self._devices.append(device)
 
         logger.info('%d device(s) have been created.' % self._ndevices)
 
