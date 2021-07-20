@@ -12,38 +12,31 @@
 			"console": "integratedTerminal"
 		},
 		{
-			"name": "Kratos User Creator",
+			"name": "Register Users",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}/test2.py",
+			"program": "${workspaceFolder}/src/scripts/register_users.py",
 			"console": "integratedTerminal"
 		},
 		{
-			"name": "Hydra User tokenCreator",
+			"name": "Login Users & get access tokens",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}/test4.py",
+			"program": "${workspaceFolder}/src/scripts/login_get_access_tokens.py",
 			"console": "integratedTerminal"
 		},
 		{
-			"name": "Kratos User login",
+			"name": "List Identities",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}/test5.py",
+			"program": "${workspaceFolder}/src/scripts/list_identities.py",
 			"console": "integratedTerminal"
 		},
 		{
-			"name": "User devices generator",
+			"name": "Delete Users",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}/test6.py",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "User Token generator",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/test9.py",
+			"program": "${workspaceFolder}/src/scripts/delete_emulation_users.py",
 			"console": "integratedTerminal"
 		},
 		{

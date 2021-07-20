@@ -1,7 +1,8 @@
 import ory_kratos_client
 from ory_kratos_client.api import v0alpha1_api
 from pprint import pprint
-import uuid
+
+# Set Kratos Admin endpoint url
 configuration = ory_kratos_client.Configuration(
     host="172.24.1.4:4434"
 )

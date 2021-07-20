@@ -8,8 +8,10 @@
 
 4. <s>Use the Orion endpoint as the device's http request target for data collection (and later use this data in jupyter notebooks for visualization). Also check if additional nginx configuration is needed for this task.</s>
 
-5. Further implementation: ORY Kratos SDK integration needed in order to replicate the following flow for multiple users at the same time:
+5. <s>Further implementation: ORY Kratos SDK integration needed in order to replicate the following flow for multiple users at the same time:
    1. Register User
    2. Login User
    3. Make initial access token request
-   4. Start the device emulation
+   4. Start the device emulation</s>
+
+6. Store created users' data and access token in mongo

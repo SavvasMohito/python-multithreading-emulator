@@ -2,16 +2,19 @@ import ory_kratos_client
 from ory_kratos_client.api import v0alpha1_api
 import json
 
+# Set Kratos Admin endpoint url
 configuration = ory_kratos_client.Configuration(
     host="172.24.1.4:4434"
 )
+
+# Load registered users' info
 userCredentials=[]
 with open('config/registeredUsers.json', 'r') as infile:
     userCredentials = json.load(infile)
+
 # Enter a context with an instance of the API client
 with ory_kratos_client.ApiClient(configuration) as api_client:
     # Delete generated user identities
-    #api_instance = admin_api.AdminApi(api_client)
     api_instance = v0alpha1_api.V0alpha1Api(api_client)
     for user_identity in userCredentials:
         try:
