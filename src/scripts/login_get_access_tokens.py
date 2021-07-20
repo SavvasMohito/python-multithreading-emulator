@@ -85,10 +85,16 @@ for user_identity in userCredentials:
   # TODO: add token to mongo with user details 
   # i.e. mongo find(id) push user
   userEntry = {}
+  userFilter={"id":  user_identity["user_id"]}
   userEntry.update({"id":  user_identity["user_id"]})
   userEntry.update({"token":  [token]})
-  #testDocument = list(dbCollection.find(userEntry))
-  #if not testDocument:
-  dbCollection.insert_one(userEntry)
+  testDocument = list(dbCollection.find(userFilter))
+  if not testDocument:
+    dbCollection.insert_one(userEntry)
+  else:
+    dbCollection.update_one(
+      userFilter,
+      {"$set":{"token":  [token]}}
+      )
   
 localClient.close()
