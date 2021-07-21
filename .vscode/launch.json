@@ -12,6 +12,13 @@
 			"console": "integratedTerminal"
 		},
 		{
+			"name": "Emulator w/out Scripts",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/src/run_without_scripts.py",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "Register Users",
 			"type": "python",
 			"request": "launch",
