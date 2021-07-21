@@ -11,8 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class Supervisor(object):
-    def __init__(self, ndevices, url, device_name, access_token=None, delay=1.):
+    def __init__(self, nusers, ndevices, url, device_name, access_token=None, delay=1.):
 
+        self._nusers = nusers
         self._ndevices = ndevices
         self._device_kwargs = {
             'url': url,
@@ -80,8 +81,12 @@ class Supervisor(object):
                 "http://172.24.1.14/download", "cert.pem")
 
             # Create the device spawner thread
+            devStart = time.time()
             spawner = threading.Thread(
                 target=self._create_devices, name='Spawner')
+            devEnd = time.time()
+            devTotal = devEnd - devStart
+            print("Access Token distribution for {} users with {} devices ({} total devices) finished in {} seconds.".format(self._nusers, self._ndevices, self._nusers*self._ndevices, devTotal))
             spawner.setDaemon(True)
             spawner.start()
 

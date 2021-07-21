@@ -16,9 +16,10 @@
    
 6. <s>Store created users' data and access token in mongo</s>
 
-7. Setup chain launch configuration for scripts with 'dependsOn' functionallity
+7. <s>Setup chain launch configuration for scripts with 'dependsOn' functionallity</s>
 
 8. Embed performance analytics and metrics for:
-   1. Distribution time of access token to devices per 1/10/100 users
-   2. Latency and Package loss between device-platform communication
-   3. Device Downtime/Uptime after token expiration handling
+   1. <s>Calculate run time of each script</s>
+   2. <s>Distribution time of access token to devices per 1/10/100 users</s>
+   3. Latency and Package loss between device-platform communication
+   4. Device Downtime/Uptime after token expiration handling

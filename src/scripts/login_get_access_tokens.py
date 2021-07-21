@@ -82,7 +82,6 @@ for user_identity in userCredentials:
   response = requests.post(token_url, auth=HTTPBasicAuth(client_id, client_secret), data=payload, headers=headers, verify="cert.pem")
 
   token = json.loads(response.text)
-  print(token)
   
   # Add users and their tokens in mongo
   userEntry = {}
