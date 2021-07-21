@@ -13,7 +13,12 @@
    2. Login User
    3. Make initial access token request
    4. Start the device emulation</s>
-
+   
 6. <s>Store created users' data and access token in mongo</s>
 
-Done!
+7. Setup chain launch configuration for scripts with 'dependsOn' functionallity
+
+8. Embed performance analytics and metrics for:
+   1. Distribution time of access token to devices per 1/10/100 users
+   2. Latency and Package loss between device-platform communication
+   3. Device Downtime/Uptime after token expiration handling
