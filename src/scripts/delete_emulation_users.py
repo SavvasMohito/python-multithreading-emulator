@@ -23,7 +23,10 @@ if (os.path.exists('config/registeredUsers.json')):
     except ServerSelectionTimeoutError:
         print("local server is down.")
         exit()
-    dbCollection = localClient["iotUsers"]["users"]   
+
+    userCollection = localClient["iotUsers"]["users"]
+    deviceCollection = localClient["iotUsers"]["devices"]
+
     # Load registered users' info
     userCredentials=[]
     with open('config/registeredUsers.json', 'r') as infile:
@@ -38,7 +41,8 @@ if (os.path.exists('config/registeredUsers.json')):
             try:
                 # Delete
                 api_response = api_instance.admin_delete_identity(id=user_id)
-                dbCollection.delete_one({"id":user_id})
+                userCollection.delete_one({"id":user_id})
+                deviceCollection.delete_many({"userID":user_id})
             except TypeError as e:
                 pass
             except ory_kratos_client.ApiException as e:
