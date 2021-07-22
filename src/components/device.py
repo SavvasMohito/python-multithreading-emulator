@@ -51,17 +51,21 @@ class Device(threading.Thread):
                 if (response.status_code == 200):
                     old_access_token=self._access_token
                     self._access_token = response.text
+                    headers = {'Content-Type': 'application/json',
+                   'Authorization': 'Bearer {}'.format(self._access_token)}
                     # retry transmission
                     response = requests.post("{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
                     # try new access token before overwritting previous one
                     if (response.status_code != 200):
+                        print("Toekn failed Reason:{}".format(response.text))
                         # race condition in typescript 
+                        # 'Access Token invalid or expired.'
                         self._access_token = old_access_token
                 else:
                     # set state to downtime
                     self._downtime_start=time.time()
                     # device gets new token that is invalid  
-                    print("Packet lost")
+                    print("Packet lost Reason:{}".format(response.text))
                 # # handle token expiration and measure downtime
                 # down_start = time.time()
                 # while (True):
