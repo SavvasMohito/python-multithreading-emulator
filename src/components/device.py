@@ -1,9 +1,10 @@
-import requests
+import json
 import logging
 import random
 import threading
 import time
-import json
+
+import requests
 
 __all__ = ['Device']
 logger = logging.getLogger(__name__)
@@ -34,13 +35,15 @@ class Device(threading.Thread):
 
             response = requests.post(
                 "{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
-            # timeout issue
+            
+            # Message sent successfully
             if (response.status_code == 200):
                 # recover from downtime
                 if self._downtime_start:
                     down_time_end= time.time()
                     down_time = '{0:.5f}'.format(down_time_end - self._downtime_start)
-                    print("Device successfully recover after {} seconds.".format(down_time))
+                    print("Device successfully recovered after {} seconds.".format(down_time))
+                    self._downtime_start=None
                 msg_end = time.time()
                 msg_time = '{0:.5f}'.format(msg_end - msg_start)
                 print("Message successfully sent in {} seconds.".format(msg_time))
@@ -66,17 +69,6 @@ class Device(threading.Thread):
                     self._downtime_start=time.time()
                     # device gets new token that is invalid  
                     print("Packet lost Reason:{}".format(response.text))
-                # # handle token expiration and measure downtime
-                # down_start = time.time()
-                # while (True):
-                #     response = requests.post(
-                #         "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
-                #     if (self._access_token != response.text):
-                #         self._access_token = response.text
-                #         down_end = time.time()
-                #         down_time = '{0:.5f}'.format(down_end - down_start)
-                #         print("Device was down for {} seconds.".format(down_time))
-                #         break
             else:
                 print("I love debugging")
         except(Exception):

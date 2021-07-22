@@ -1,10 +1,13 @@
+import json
+import logging
+import random
 import threading
 import time
-import logging
 import urllib.request
+
 from pymongo import MongoClient
+
 from .device import Device
-import json
 
 __all__ = ['Supervisor']
 logger = logging.getLogger(__name__)
@@ -63,6 +66,8 @@ class Supervisor(object):
             user_id=user_identity["user_id"]
             self._device_kwargs["access_token"]=self.get_access_token(user_id)
             for i in range(self._ndevices):
+                # TODO: Maybe implement random delay for each device
+                #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
                 device = Device(thread_index=j, **self._device_kwargs)
                 j=j+1
                 device.setDaemon(True)
