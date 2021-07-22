@@ -40,14 +40,12 @@ class Device(threading.Thread):
                 print("Message successfully sent in {} seconds.".format(msg_time))
 
             if (response.status_code == 403):
-                print("fail")
                 response = requests.post(
                         "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
                 
                 # handle token expiration and measure downtime
                 down_start = time.time()
                 while (True):
-                    print("nedhos")
                     response = requests.post(
                         "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
                     if (self._access_token != response.text):
