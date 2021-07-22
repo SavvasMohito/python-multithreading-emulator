@@ -42,18 +42,21 @@ class Device(threading.Thread):
             if (response.status_code == 403):
                 response = requests.post(
                         "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
-                
-                # handle token expiration and measure downtime
-                down_start = time.time()
-                while (True):
-                    response = requests.post(
-                        "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
-                    if (self._access_token != response.text):
-                        self._access_token = response.text
-                        down_end = time.time()
-                        down_time = '{0:.5f}'.format(down_end - down_start)
-                        print("Device was down for {} seconds.".format(down_time))
-                        break
+                if (response.status_code == 200):
+                    self._access_token = response.text
+                else:
+                    print("Packet lost")
+                # # handle token expiration and measure downtime
+                # down_start = time.time()
+                # while (True):
+                #     response = requests.post(
+                #         "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
+                #     if (self._access_token != response.text):
+                #         self._access_token = response.text
+                #         down_end = time.time()
+                #         down_time = '{0:.5f}'.format(down_end - down_start)
+                #         print("Device was down for {} seconds.".format(down_time))
+                #         break
 
         except(Exception):
             logger.info(Exception)
