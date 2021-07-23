@@ -25,7 +25,7 @@ def get_arguments():
 def main():
     # Setup supervisor for all devices for all users 
     if get_arguments() is not False:
-        print("Starting Emulation!")
+        print("\nStarting Emulation!")
         supervisor = Supervisor(*get_arguments())
         supervisor.start()
         

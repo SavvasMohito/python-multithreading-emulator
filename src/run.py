@@ -29,7 +29,7 @@ def get_arguments():
 def main():
     # Run scripts
     for script in script_list:
-        print("Running: {}".format(script))
+        print("\nRunning: {}".format(script))
         start_time = time()
         subprocess.call(['python3', "src/scripts/{}".format(script)])
         end_time = time()
@@ -38,7 +38,7 @@ def main():
 
     # Setup supervisor for all devices for all users 
     if get_arguments() is not False:
-        print("Starting Emulation!")
+        print("\nStarting Emulation!")
         supervisor = Supervisor(*get_arguments())
         supervisor.start()
         

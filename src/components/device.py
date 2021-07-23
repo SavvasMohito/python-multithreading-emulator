@@ -42,11 +42,11 @@ class Device(threading.Thread):
                 if self._downtime_start:
                     down_time_end= time.time()
                     down_time = '{0:.5f}'.format(down_time_end - self._downtime_start)
-                    print("Device successfully recovered after {} seconds.".format(down_time))
+                    print("Device recovered after {} seconds of downtime.".format(down_time))
                     self._downtime_start=None
                 msg_end = time.time()
                 msg_time = '{0:.5f}'.format(msg_end - msg_start)
-                print("Message successfully sent in {} seconds.".format(msg_time))
+                print("Message sent successfully in {} seconds.".format(msg_time))
             elif (response.status_code == 403):
                 # tripping here 
                 response = requests.post(
@@ -60,7 +60,7 @@ class Device(threading.Thread):
                     response = requests.post("{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
                     # try new access token before overwritting previous one
                     if (response.status_code != 200):
-                        print("Toekn failed Reason:{}".format(response.text))
+                        print("Token failed. Reason: {}".format(response.text))
                         # race condition in typescript 
                         # 'Access Token invalid or expired.'
                         self._access_token = old_access_token
@@ -68,9 +68,9 @@ class Device(threading.Thread):
                     # set state to downtime
                     self._downtime_start=time.time()
                     # device gets new token that is invalid  
-                    print("Packet lost Reason:{}".format(response.text))
+                    print("Packet lost. Reason: {}".format(response.text))
             else:
-                print("I love debugging")
+                print("Error: Unhandled response.status_code")
         except(Exception):
             logger.info(Exception)
 
