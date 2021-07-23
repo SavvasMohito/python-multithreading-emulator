@@ -18,8 +18,10 @@
 
 7. <s>Setup chain launch configuration for scripts with 'dependsOn' functionallity</s>
 
-8. Embed performance analytics and metrics for:
-   1. <s>Calculate run time of each script</s>
-   2. <s>Distribution time of access token to devices per 1/10/100 users</s>
+8. <s>Embed performance analytics and metrics for:
+   1. Calculate run time of each script
+   2. Distribution time of access token to devices per 1/10/100 users
    3. Latency and Package loss between device-platform communication
-   4. Device Downtime/Uptime after token expiration handling
+   4. Device Downtime/Uptime after token expiration handling</s>
+
+9. Maybe collect analytics from kratos' and hydra's GET /metrics/prometheus endpoint.
