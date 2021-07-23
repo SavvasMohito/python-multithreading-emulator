@@ -90,8 +90,11 @@ class Supervisor(object):
             spawner = threading.Thread(
                 target=self._create_devices, name='Spawner')
             devEnd = time.time()
+            s1 = "s" if self._nusers > 1 else ""
+            s2 = "s" if self._ndevices > 1 else ""
+            s3 = "s" if self._nusers*self._ndevices > 1 else ""
             devTotal = devEnd - devStart
-            print("Access Token distribution for {} users with {} devices ({} total devices) finished in {} seconds.".format(self._nusers, self._ndevices, self._nusers*self._ndevices, devTotal))
+            print("Access Token distribution for {} user{} with {} device{} ({} total device{}) finished in {} seconds.".format(self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3, devTotal))
             spawner.setDaemon(True)
             spawner.start()
 
