@@ -5,7 +5,7 @@ import threading
 import time
 import urllib.request
 
-from metrics import save_script_metric
+from metrics import create_user_metrics_folder, save_script_metric
 from pymongo import MongoClient
 
 from .device import Device
@@ -66,11 +66,12 @@ class Supervisor(object):
             userCredentials = json.load(infile)
         for user_identity in userCredentials:
             user_id = user_identity["user_id"]
+            create_user_metrics_folder(user_id)
             self._device_kwargs["access_token"] = self.get_access_token(user_id)
             for i in range(self._ndevices):
                 # TODO: Maybe implement random delay for each device
                 #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
-                device = Device(thread_index=j, **self._device_kwargs)
+                device = Device(thread_index=j, **self._device_kwargs, user_id=user_id)
                 j = j+1
                 device.setDaemon(True)
                 device.start()
