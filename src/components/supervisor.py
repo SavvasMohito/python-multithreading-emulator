@@ -9,12 +9,14 @@ from pymongo import MongoClient
 
 from .device import Device
 
+from metrics import save_script_metrics
+
 __all__ = ['Supervisor']
 logger = logging.getLogger(__name__)
 
 
 class Supervisor(object):
-    def __init__(self, nusers, ndevices, url, device_name, access_token=None, delay=1.):
+    def __init__(self, nusers, ndevices, url, device_name, access_token=None, delay=2):
 
         self._nusers = nusers
         self._ndevices = ndevices
@@ -95,6 +97,7 @@ class Supervisor(object):
             s3 = "s" if self._nusers*self._ndevices > 1 else ""
             devTotal = devEnd - devStart
             print("Access Token distribution for {} user{} with {} device{} ({} total device{}) finished in {} seconds.".format(self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3, devTotal))
+            save_script_metrics([{'SCRIPT_NAME' : 'access_token_distribution','SCRIPT_TIME' : devTotal}])
             spawner.setDaemon(True)
             spawner.start()
 

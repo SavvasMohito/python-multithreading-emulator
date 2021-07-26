@@ -1,5 +1,6 @@
 import json
-import os.path
+import os
+import shutil
 
 import ory_kratos_client
 from ory_kratos_client.api import v0alpha1_api
@@ -10,6 +11,10 @@ from pymongo.errors import ServerSelectionTimeoutError
 configuration = ory_kratos_client.Configuration(
     host="172.24.1.4:4434"
 )
+
+if (os.path.exists('metrics')):
+    shutil.rmtree('metrics')
+
 if (os.path.exists('config/registeredUsers.json')):
     localClient = MongoClient(
         "mongodatabasehost",
