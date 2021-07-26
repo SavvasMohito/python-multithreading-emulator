@@ -3,6 +3,7 @@ import logging
 
 from components.supervisor import Supervisor
 
+
 def get_arguments():
     args = False
     try:

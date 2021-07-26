@@ -1,9 +1,9 @@
+import datetime
 import json
 import logging
 import random
 import threading
 import time
-import datetime
 
 import requests
 from metrics import save_device_metric
@@ -15,7 +15,7 @@ random.seed()
 
 class Device(threading.Thread):
 
-    def __init__(self, supervisor, url, device_name, thread_index, access_token=None, delay=2):
+    def __init__(self, supervisor, url, device_name, thread_index, access_token=None, delay=1.):
         threading.Thread.__init__(self, name='Device_%s' % thread_index)
 
         self._supervisor = supervisor
@@ -42,31 +42,39 @@ class Device(threading.Thread):
                 # recover from downtime
                 if self._downtime_start:
                     down_time_end = time.time()
-                    down_time = '{0:.5f}'.format(down_time_end - self._downtime_start)
+                    down_time = '{0:.5f}'.format(
+                        down_time_end - self._downtime_start)
                     print("Device recovered after {} seconds of downtime.".format(down_time))
-                    save_device_metric({'EVENT' : 'Device Recovered','DURATION' :down_time, 'RESPONSE_CODE':response.status_code,'TIMESTAMP': datetime.datetime.now() },self._device_name)
+                    save_device_metric({'EVENT': 'Device Recovered',
+                                        'DURATION': down_time,
+                                        'RESPONSE_CODE': response.status_code,
+                                        'TIMESTAMP': datetime.datetime.now()}, self._device_name)
                     self._downtime_start = None
                 msg_end = time.time()
                 msg_time = '{0:.5f}'.format(msg_end - msg_start)
                 print("Message sent successfully in {} seconds.".format(msg_time))
-                save_device_metric({'EVENT' : 'Message sent','DURATION' :msg_time, 'RESPONSE_CODE':response.status_code,'TIMESTAMP': datetime.datetime.now() },self._device_name)
+                save_device_metric({'EVENT': 'Message sent',
+                                    'DURATION': msg_time,
+                                    'RESPONSE_CODE': response.status_code,
+                                    'TIMESTAMP': datetime.datetime.now()}, self._device_name)
             elif (response.status_code == 403):
                 # tripping here
-                response = requests.post(
-                    "{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
+                response = requests.post("{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
                 if (response.status_code == 200):
                     old_access_token = self._access_token
                     self._access_token = response.text
                     headers = {'Content-Type': 'application/json',
                                'Authorization': 'Bearer {}'.format(self._access_token)}
                     # retry transmission
-                    response = requests.post("{}{}".format(
-                        self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
+                    response = requests.post("{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
                     # try new access token before overwritting previous one
-                    if (response.status_code != 200): 
+                    if (response.status_code != 200):
                         msg = "Token failed. Reason: {}".format(response.text)
                         print(msg)
-                        save_device_metric({'EVENT' : msg,'DURATION' :'', 'RESPONSE_CODE':response.status_code,'TIMESTAMP': datetime.datetime.now() },self._device_name)
+                        save_device_metric({'EVENT': msg,
+                                            'DURATION': '',
+                                            'RESPONSE_CODE': response.status_code,
+                                            'TIMESTAMP': datetime.datetime.now()}, self._device_name)
                         # race condition in typescript
                         # 'Access Token invalid or expired.'
                         self._access_token = old_access_token
@@ -76,11 +84,17 @@ class Device(threading.Thread):
                     # device gets new token that is invalid
                     msg = "Packet lost. Reason: {}".format(response.text)
                     print(msg)
-                    save_device_metric({'EVENT' : msg,'DURATION' :'', 'RESPONSE_CODE':response.status_code,'TIMESTAMP': datetime.datetime.now() },self._device_name)
+                    save_device_metric({'EVENT': msg,
+                                        'DURATION': '',
+                                        'RESPONSE_CODE': response.status_code,
+                                        'TIMESTAMP': datetime.datetime.now()}, self._device_name)
             else:
                 msg = "Error: Unhandled response.status_code"
                 print(msg)
-                save_device_metric({'EVENT' : msg,'DURATION' :'', 'RESPONSE_CODE':response.status_code,'TIMESTAMP': datetime.datetime.now() },self._device_name)
+                save_device_metric({'EVENT': msg,
+                                    'DURATION': '',
+                                    'RESPONSE_CODE': response.status_code,
+                                    'TIMESTAMP': datetime.datetime.now()}, self._device_name)
         except(Exception):
             logger.info(Exception)
 

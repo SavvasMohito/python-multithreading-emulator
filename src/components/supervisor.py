@@ -5,24 +5,23 @@ import threading
 import time
 import urllib.request
 
+from metrics import save_script_metric
 from pymongo import MongoClient
 
 from .device import Device
-
-from metrics import save_script_metrics
 
 __all__ = ['Supervisor']
 logger = logging.getLogger(__name__)
 
 
 class Supervisor(object):
-    def __init__(self, nusers, ndevices, url, device_name, access_token=None, delay=2):
+    def __init__(self, nusers, ndevices, url, device_name, delay=1.):
 
         self._nusers = nusers
         self._ndevices = ndevices
         self._device_kwargs = {
             'url': url,
-            'access_token': access_token,
+            'access_token': None,
             'device_name': device_name,
             'supervisor': self,
             # Maybe add this in the future
@@ -31,9 +30,9 @@ class Supervisor(object):
         }
         self._is_running = False
         self._devices = []
-    
+
     # Get access token for each user name
-    def get_access_token(self,user_id):
+    def get_access_token(self, user_id):
         access_token = False
 
         try:
@@ -49,6 +48,7 @@ class Supervisor(object):
             logging.info(Exception)
 
         return access_token
+
     @property
     def is_running(self):
         return self._is_running
@@ -59,19 +59,19 @@ class Supervisor(object):
 
     def _create_devices(self):
         logger.info('Creating Devices...')
-        #for j in range (self._nusers):
-        userCredentials=[]
-        j=0
+        # for j in range (self._nusers):
+        userCredentials = []
+        j = 0
         with open('config/registeredUsers.json', 'r') as infile:
             userCredentials = json.load(infile)
         for user_identity in userCredentials:
-            user_id=user_identity["user_id"]
-            self._device_kwargs["access_token"]=self.get_access_token(user_id)
+            user_id = user_identity["user_id"]
+            self._device_kwargs["access_token"] = self.get_access_token(user_id)
             for i in range(self._ndevices):
                 # TODO: Maybe implement random delay for each device
                 #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
                 device = Device(thread_index=j, **self._device_kwargs)
-                j=j+1
+                j = j+1
                 device.setDaemon(True)
                 device.start()
                 self._devices.append(device)
@@ -96,8 +96,9 @@ class Supervisor(object):
             s2 = "s" if self._ndevices > 1 else ""
             s3 = "s" if self._nusers*self._ndevices > 1 else ""
             devTotal = devEnd - devStart
-            print("Access Token distribution for {} user{} with {} device{} ({} total device{}) finished in {} seconds.".format(self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3, devTotal))
-            save_script_metrics([{'SCRIPT_NAME' : 'access_token_distribution','SCRIPT_TIME' : devTotal}])
+            print("Access Token distribution for {} user{} with {} device{} ({} total device{}) finished in {} seconds.".format(
+                self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3, devTotal))
+            save_script_metric({'SCRIPT_NAME': 'access_token_distribution', 'SCRIPT_TIME': devTotal})
             spawner.setDaemon(True)
             spawner.start()
 

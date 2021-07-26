@@ -3,13 +3,11 @@ import logging
 import subprocess
 from time import time
 
-
 from components.supervisor import Supervisor
-from metrics import save_script_metrics
+from metrics import save_script_metric
 
-
-script_list=['delete_emulation_users.py', 'register_users.py', 'login_get_access_tokens.py']
-
+script_list = ['delete_emulation_users.py',
+               'register_users.py', 'login_get_access_tokens.py']
 
 
 def get_arguments():
@@ -21,9 +19,9 @@ def get_arguments():
         file.close()
         args = [
             config["users"],
-            config["devices"], 
+            config["devices"],
             config["url"],
-            config["device_name"], 
+            config["device_name"],
             config["delay"],
         ]
     except Exception:
@@ -31,25 +29,25 @@ def get_arguments():
 
     return args
 
+
 def main():
-    metrics_times=[]
+    metrics_times = []
     # Run scripts
     for script in script_list:
         print("\nRunning: {}".format(script))
         start_time = time()
         subprocess.call(['python3', "src/scripts/{}".format(script)])
         end_time = time()
-        total_time = '{0:.3f}'.format(end_time - start_time)     
-        metrics_times.append({'SCRIPT_NAME' : script,'SCRIPT_TIME' : total_time})
+        total_time = '{0:.3f}'.format(end_time - start_time)
+        save_script_metric({'SCRIPT_NAME': script, 'SCRIPT_TIME': total_time})
         print("Finished in {} seconds.".format(total_time))
-    
-    # Write the results in csv
-    save_script_metrics(metrics_times)
-    # Setup supervisor for all devices for all users 
+
+    # Setup supervisor for all devices for all users
     if get_arguments() is not False:
         print("\nStarting Emulation!")
         supervisor = Supervisor(*get_arguments())
         supervisor.start()
-        
+
+
 if __name__ == "__main__":
     main()

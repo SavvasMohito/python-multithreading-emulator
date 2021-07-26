@@ -25,3 +25,5 @@
    4. Device Downtime/Uptime after token expiration handling</s>
 
 9. Maybe collect analytics from kratos' and hydra's GET /metrics/prometheus endpoint.
+
+10. Save metrics in csv files so they can be later used for logging and graph generation
