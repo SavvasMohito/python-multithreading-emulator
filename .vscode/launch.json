@@ -59,6 +59,13 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/src/others/test6.py",
 			"console": "integratedTerminal"
+		},
+		{
+			"name": "Emulator Collector",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/src/others/test7.py",
+			"console": "integratedTerminal"
 		}
 	]
 }
