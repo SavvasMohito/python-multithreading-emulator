@@ -2,6 +2,19 @@
 import os
 import pandas
 import re
+
+import matplotlib.pyplot as plt
+from matplotlib import use,rcParams
+
+# latex settings
+#use("pgf")
+#rcParams.update({
+#    "pgf.texsystem": "pdflatex",
+#    'font.family': 'serif',
+#    'text.usetex': True,
+#    'pgf.rcfonts': False,
+#})
+
 # metrics ->  user -> devices 
 
 def load_all_csv(metrics_path, expression=".*.csv", **kwargs) -> pandas.Series :
@@ -27,3 +40,11 @@ def load_all_csv(metrics_path, expression=".*.csv", **kwargs) -> pandas.Series :
 
 df= load_all_csv("/usr/src/app/metrics/devices")
 len(df)
+fig1, ax1 = plt.subplots()
+#ax1.set_title('Duration')
+#ax1.boxplot(df['DURATION'])
+ax1.boxplot(df['DURATION'],labels=["DURATION"])
+plt.savefig('duration.png')
+
+
+#plt.savefig('duration.pgf')
