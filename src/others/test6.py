@@ -20,4 +20,9 @@ for metricName in metricsDict['data']:
   if "hydra" in metricName:
     print(metricName)
     hydra_metric = requests.get("https://172.24.1.14/prometheus/api/v1/query?query={}".format(metricName),verify="cert.pem").text
-    print(hydra_metric)
+    print(loads(hydra_metric))
+
+  if "kratos" in metricName:
+    print(metricName)
+    kratos_metric = requests.get("https://172.24.1.14/prometheus/api/v1/query?query={}".format(metricName),verify="cert.pem").text
+    print(loads(kratos_metric))
