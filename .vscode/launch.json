@@ -52,6 +52,13 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/test-server.js",
 			"console": "integratedTerminal"
+		},
+		{
+			"name": "Prometheus Collector",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}/src/others/test6.py",
+			"console": "integratedTerminal"
 		}
 	]
 }
