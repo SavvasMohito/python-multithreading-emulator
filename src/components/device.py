@@ -45,7 +45,7 @@ class Device(threading.Thread):
                     down_time_end = time.time()
                     down_time = '{0:.5f}'.format(
                         down_time_end - self._downtime_start)
-                    print("Device recovered after {} seconds of downtime.".format(down_time))
+                    #print("Device recovered after {} seconds of downtime.".format(down_time))
                     save_device_metric({'EVENT': 'Device Recovered',
                                         'DURATION': down_time,
                                         'RESPONSE_CODE': response.status_code,
@@ -53,7 +53,7 @@ class Device(threading.Thread):
                     self._downtime_start = None
                 msg_end = time.time()
                 msg_time = '{0:.5f}'.format(msg_end - msg_start)
-                print("Message sent successfully in {} seconds.".format(msg_time))
+                #print("Message sent successfully in {} seconds.".format(msg_time))
                 save_device_metric({'EVENT': 'Message sent',
                                     'DURATION': msg_time,
                                     'RESPONSE_CODE': response.status_code,
@@ -71,7 +71,7 @@ class Device(threading.Thread):
                     # try new access token before overwritting previous one
                     if (response.status_code != 200):
                         msg = "Token failed. Reason: {}".format(response.text)
-                        print(msg)
+                        #print(msg)
                         save_device_metric({'EVENT': msg,
                                             'DURATION': '',
                                             'RESPONSE_CODE': response.status_code,
@@ -84,14 +84,14 @@ class Device(threading.Thread):
                     self._downtime_start = time.time()
                     # device gets new token that is invalid
                     msg = "Packet lost. Reason: {}".format(response.text)
-                    print(msg)
+                    #print(msg)
                     save_device_metric({'EVENT': msg,
                                         'DURATION': '',
                                         'RESPONSE_CODE': response.status_code,
                                         'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
             else:
                 msg = "Error: Unhandled response.status_code"
-                print(msg)
+                #print(msg)
                 save_device_metric({'EVENT': msg,
                                     'DURATION': '',
                                     'RESPONSE_CODE': response.status_code,
