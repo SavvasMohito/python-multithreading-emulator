@@ -45,6 +45,8 @@ except ServerSelectionTimeoutError:
   exit()
 dbCollection = localClient["iotUsers"]["users"]   
 
+storeCredentials = []
+
 for user_identity in userCredentials:
   
   # Get Login Flow from Kratos
@@ -83,6 +85,13 @@ for user_identity in userCredentials:
 
   token = json.loads(response.text)
   
+  # Add registered user in list
+  storeCredentials.append({
+    "user_token":token["access_token"],
+    "user_id":json_res['identity']['id']
+  })
+
+
   # Add users and their tokens in mongo
   userEntry = {}
   userFilter={"id":  user_identity["user_id"]}
@@ -98,3 +107,7 @@ for user_identity in userCredentials:
       )
   
 localClient.close()
+
+# End of registration. Store users in file
+with open('config/remoteEmulatorUsers.json', 'w') as outfile:
+    json.dump(storeCredentials,outfile, indent=2, sort_keys=True)
