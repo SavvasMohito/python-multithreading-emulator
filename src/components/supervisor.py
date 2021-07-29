@@ -12,7 +12,7 @@ from .device import Device
 
 __all__ = ['Supervisor']
 logger = logging.getLogger(__name__)
-
+logging.basicConfig(filename='supervisor.log', encoding='utf-8', level=logging.INFO)
 
 class Supervisor(object):
     def __init__(self, nusers, ndevices, url, device_name, delay=1.):

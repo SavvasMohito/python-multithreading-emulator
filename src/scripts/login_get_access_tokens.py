@@ -75,6 +75,7 @@ for user_identity in userCredentials:
   }
   response = requests.get(code_url, headers=headers, verify="cert.pem")
   queryElements=parse_qs(response.text)
+  # redirect on hlogin,hconsent requires changes
   code=queryElements['/callback?code'][0]
 
   # Exchange code for a token item (access_token, refresh_token)
