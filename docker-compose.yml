@@ -10,6 +10,8 @@ services:
       network: host
     # TODO : add users file with id,token
     command: python src/run_without_scripts.py
+    environment:
+      - NGINX_HOST_CONFIG=${NGINX_HOST_CONFIG}
     volumes:
       - type: bind
         source: .
