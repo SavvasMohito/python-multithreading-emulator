@@ -1,8 +1,10 @@
 import json
 import logging
+import os
 
 from components.supervisor import Supervisor
 
+NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
 
 def get_arguments():
     args = False
@@ -14,7 +16,7 @@ def get_arguments():
         args = [
             config["users"],
             config["devices"], 
-            config["url"],
+            'https://{}{}'.format(NGINX_URL,config["url"]),
             config["device_name"], 
             config["delay"],
         ]
