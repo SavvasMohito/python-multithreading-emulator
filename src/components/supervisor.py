@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import random
 import threading
 import time
@@ -9,8 +10,6 @@ from metrics import create_user_metrics_folder, save_script_metric
 from pymongo import MongoClient
 
 from .device import Device
-
-import os
 
 NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
 
@@ -63,7 +62,6 @@ class Supervisor(object):
 
     def _create_devices(self):
         logger.info('Creating Devices...')
-        # for j in range (self._nusers):
         userCredentials = []
         j = 0
         with open('config/registeredUsers.json', 'r') as infile:

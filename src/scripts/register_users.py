@@ -1,10 +1,9 @@
 import json
+import os
 import secrets
 from urllib.request import urlretrieve
 
 import requests
-
-import os
 
 NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
 

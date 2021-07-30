@@ -1,4 +1,5 @@
 import json
+import os
 from urllib.parse import parse_qs
 from urllib.request import urlretrieve
 
@@ -6,8 +7,6 @@ import requests
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 from requests.auth import HTTPBasicAuth
-
-import os
 
 NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
 
@@ -25,11 +24,8 @@ client_secret = clientinfo["confSecret"]["client_secret"]
 redirect_uri = 'https://{}/emulator/callback'.format(NGINX_URL)
 scope = ["offline_access"]
 
-
-
-
 # Set URLs
-code_url = "https://{}/hydra/oauth2/auth?client_id={}&redirect_uri={}&response_type=code&scope={}&state=aW90LTVnLWNyZXc".format(NGINX_URL,client_id, redirect_uri, scope[0])
+code_url = "https://{}/hydra/oauth2/auth?client_id={}&redirect_uri={}&response_type=code&scope={}&state=aW90LTVnLWNyZXc".format(NGINX_URL, client_id, redirect_uri, scope[0])
 login_url = "https://{}/kratos/self-service/login/api".format(NGINX_URL)
 token_url = "https://{}/hydra/oauth2/token".format(NGINX_URL)
 
