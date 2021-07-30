@@ -4,10 +4,14 @@ from urllib.request import urlretrieve
 
 import requests
 
-# Download SSL Certificate
-urlretrieve("http://172.24.1.14/download", "cert.pem")
+import os
 
-registration_url = "https://172.24.1.14/kratos/self-service/registration/api"
+NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
+
+# Download SSL Certificate
+urlretrieve("http://{}/download".format(NGINX_URL), "cert.pem")
+
+registration_url = "https://{}/kratos/self-service/registration/api".format(NGINX_URL)
 
 # Load Users' Info
 with open('config/names.json', 'r') as infile:

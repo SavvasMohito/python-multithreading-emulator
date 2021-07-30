@@ -7,8 +7,12 @@ from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 from requests.auth import HTTPBasicAuth
 
+import os
+
+NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
+
 # Download SSL Certificate
-urlretrieve("http://172.24.1.14/download", "cert.pem")
+urlretrieve("http://{}/download".format(NGINX_URL), "cert.pem")
 
 # Load Hydra Client Info
 file = open('/var/lib/cert-storage/hydraClient.json', 'r')
@@ -18,13 +22,16 @@ file.close()
 # Set Hydra Client Info
 client_id = clientinfo["confClient"]["client_id"]
 client_secret = clientinfo["confSecret"]["client_secret"]
-redirect_uri = 'https://172.24.1.14/emulator/callback'
+redirect_uri = 'https://{}/emulator/callback'.format(NGINX_URL)
 scope = ["offline_access"]
 
+
+
+
 # Set URLs
-code_url = "https://172.24.1.14/hydra/oauth2/auth?client_id={}&redirect_uri={}&response_type=code&scope={}&state=aW90LTVnLWNyZXc".format(client_id, redirect_uri, scope[0])
-login_url = "https://172.24.1.14/kratos/self-service/login/api"
-token_url = "https://172.24.1.14/hydra/oauth2/token"
+code_url = "https://{}/hydra/oauth2/auth?client_id={}&redirect_uri={}&response_type=code&scope={}&state=aW90LTVnLWNyZXc".format(NGINX_URL,client_id, redirect_uri, scope[0])
+login_url = "https://{}/kratos/self-service/login/api".format(NGINX_URL)
+token_url = "https://{}/hydra/oauth2/token".format(NGINX_URL)
 
 # Load registered users' info in userCredentials list
 userCredentials=[]

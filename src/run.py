@@ -2,6 +2,9 @@ import json
 import logging
 import subprocess
 from time import time
+import os
+
+NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
 
 from components.supervisor import Supervisor
 from metrics import save_script_metric
@@ -17,10 +20,11 @@ def get_arguments():
         file = open('config/config.json', 'r')
         config = json.load(file)
         file.close()
+        # TODO: change config URL
         args = [
             config["users"],
             config["devices"],
-            config["url"],
+            'https://{}{}'.format(NGINX_URL,config["url"]),
             config["device_name"],
             config["delay"],
         ]

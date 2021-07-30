@@ -10,6 +10,10 @@ from pymongo import MongoClient
 
 from .device import Device
 
+import os
+
+NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
+
 __all__ = ['Supervisor']
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='supervisor.log', encoding='utf-8', level=logging.INFO)
@@ -86,7 +90,7 @@ class Supervisor(object):
         try:
             # Retrieve ssl certificate from the http /download endpoint
             urllib.request.urlretrieve(
-                "http://172.24.1.14/download", "cert.pem")
+                "http://{}/download".format(NGINX_URL), "cert.pem")
 
             # Create the device spawner thread
             devStart = time.time()
