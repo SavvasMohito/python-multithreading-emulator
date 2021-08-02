@@ -65,13 +65,13 @@ class Supervisor(object):
         userCredentials = []
         j = 0
         # TODO change the config file to config/remoteEmulatorUsers.json
-        with open('config/registeredUsers.json', 'r') as infile:
+        with open('config/remoteEmulatorUsers.json', 'r') as infile:
             userCredentials = json.load(infile)
         for user_identity in userCredentials:
             user_id = user_identity["user_id"]
             create_user_metrics_folder(user_id)
             # TODO change self.get_access_token(user_id) to user_identity["user_token"]
-            self._device_kwargs["access_token"] = self.get_access_token(user_id)
+            self._device_kwargs["access_token"] = user_identity["user_token"]
             for i in range(self._ndevices):
                 # TODO: Maybe implement random delay for each device
                 #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
@@ -82,6 +82,11 @@ class Supervisor(object):
                 self._devices.append(device)
 
         logger.info('%d device(s) have been created.' % self._ndevices)
+        s1 = "s" if self._nusers > 1 else ""
+        s2 = "s" if self._ndevices > 1 else ""
+        s3 = "s" if self._nusers*self._ndevices > 1 else ""
+        print("{} user{} with {} device{} ({} total device{}) have been created.".format(
+            self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3))
 
     def start(self):
         logger.info('Starting...')
