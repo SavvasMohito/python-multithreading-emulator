@@ -1,10 +1,13 @@
 import json
 import logging
+import os
 import subprocess
 from time import time
 
 from components.supervisor import Supervisor
 from metrics import save_script_metric
+
+NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
 
 script_list = ['delete_emulation_users.py',
                'register_users.py', 'login_get_access_tokens.py']
@@ -17,10 +20,11 @@ def get_arguments():
         file = open('config/config.json', 'r')
         config = json.load(file)
         file.close()
+        # TODO: change config URL
         args = [
             config["users"],
             config["devices"],
-            config["url"],
+            'https://{}{}'.format(NGINX_URL,config["url"]),
             config["device_name"],
             config["delay"],
         ]

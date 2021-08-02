@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import random
 import threading
 import time
@@ -9,6 +10,8 @@ from metrics import create_user_metrics_folder, save_script_metric
 from pymongo import MongoClient
 
 from .device import Device
+
+NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
 
 __all__ = ['Supervisor']
 logger = logging.getLogger(__name__)
@@ -59,7 +62,6 @@ class Supervisor(object):
 
     def _create_devices(self):
         logger.info('Creating Devices...')
-        # for j in range (self._nusers):
         userCredentials = []
         j = 0
         # TODO change the config file to config/remoteEmulatorUsers.json
@@ -80,6 +82,11 @@ class Supervisor(object):
                 self._devices.append(device)
 
         logger.info('%d device(s) have been created.' % self._ndevices)
+        s1 = "s" if self._nusers > 1 else ""
+        s2 = "s" if self._ndevices > 1 else ""
+        s3 = "s" if self._nusers*self._ndevices > 1 else ""
+        print("{} user{} with {} device{} ({} total device{}) have been created.".format(
+            self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3))
 
     def start(self):
         logger.info('Starting...')
@@ -88,7 +95,7 @@ class Supervisor(object):
         try:
             # Retrieve ssl certificate from the http /download endpoint
             urllib.request.urlretrieve(
-                "http://172.24.1.14/download", "cert.pem")
+                "http://{}/download".format(NGINX_URL), "cert.pem")
 
             # Create the device spawner thread
             devStart = time.time()
