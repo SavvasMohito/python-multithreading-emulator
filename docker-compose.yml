@@ -10,6 +10,7 @@ services:
       network: host
     # TODO : add users file with id,token
     command: python src/run_without_scripts.py
+    #command: /bin/sh -c "while sleep 1000; do :; done"
     environment:
       - NGINX_HOST_CONFIG=${NGINX_HOST_CONFIG}
     volumes:

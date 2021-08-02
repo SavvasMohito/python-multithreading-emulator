@@ -100,9 +100,12 @@ class Device(threading.Thread):
             logger.info(Exception)
 
     def run(self):
+        while not self._supervisor.is_setup_complete:
+            time.sleep(self._delay)
         try:
             while self._supervisor.is_running:
                 self._send_data()
                 time.sleep(self._delay)
+
         except(Exception):
             logger.info(Exception)
