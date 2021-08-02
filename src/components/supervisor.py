@@ -32,6 +32,7 @@ class Supervisor(object):
             'delay': delay
         }
         self._is_running = False
+        self._setup_complete= False
         self._devices = []
 
     # Get access token for each user name
@@ -55,6 +56,9 @@ class Supervisor(object):
     @property
     def is_running(self):
         return self._is_running
+    @property
+    def is_setup_complete(self):
+        return self._setup_complete
 
     def _stop(self):
         self._is_running = False
@@ -85,6 +89,7 @@ class Supervisor(object):
         s3 = "s" if self._nusers*self._ndevices > 1 else ""
         print("{} user{} with {} device{} ({} total device{}) have been created.".format(
             self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3))
+        self._setup_complete= True
 
     def start(self):
         logger.info('Starting...')
