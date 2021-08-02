@@ -36,7 +36,7 @@ class Device(threading.Thread):
             msg_start = time.time()
 
             response = requests.post(
-                "{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem",timeout=1)
+                "{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem",timeout=20)
 
             # Message sent successfully
             if (response.status_code == 200):
@@ -96,8 +96,8 @@ class Device(threading.Thread):
                                     'DURATION': '',
                                     'RESPONSE_CODE': response.status_code,
                                     'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
-        except(Exception):
-            logger.info(Exception)
+        except(Exception) as e:
+            logger.info("exception: {}".format(e))
 
     def run(self):
         while not self._supervisor.is_setup_complete:
