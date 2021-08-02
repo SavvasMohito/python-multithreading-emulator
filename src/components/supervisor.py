@@ -80,6 +80,11 @@ class Supervisor(object):
                 self._devices.append(device)
 
         logger.info('%d device(s) have been created.' % self._ndevices)
+        s1 = "s" if self._nusers > 1 else ""
+        s2 = "s" if self._ndevices > 1 else ""
+        s3 = "s" if self._nusers*self._ndevices > 1 else ""
+        print("{} user{} with {} device{} ({} total device{}) have been created.".format(
+            self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3))
 
     def start(self):
         logger.info('Starting...')
