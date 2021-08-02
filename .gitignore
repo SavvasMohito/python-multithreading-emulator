@@ -113,3 +113,4 @@ config/registeredUsers.json
 
 # Metrics
 metrics
+config/remoteEmulatorUsers.json
