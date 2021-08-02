@@ -113,3 +113,6 @@ config/registeredUsers.json
 
 # Metrics
 metrics
+
+# Standalone simulator file
+config/remoteEmulatorUsers.json
