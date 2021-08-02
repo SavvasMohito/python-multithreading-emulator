@@ -36,7 +36,7 @@ class Device(threading.Thread):
             msg_start = time.time()
 
             response = requests.post(
-                "{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem")
+                "{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers, verify="cert.pem",timeout=1)
 
             # Message sent successfully
             if (response.status_code == 200):

@@ -11,6 +11,7 @@ def create_user_metrics_folder(user_id):
 def save_script_metric(metric):
     if not (os.path.exists('metrics')):
         os.mkdir('metrics')
+    if not (os.path.exists('metrics/devices')):
         os.mkdir('metrics/devices')
     path = "metrics/scripts.csv"
     input_type = "a" if (os.path.exists(path)) else "w"
