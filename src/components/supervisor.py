@@ -34,6 +34,7 @@ class Supervisor(object):
         self._is_running = False
         self._setup_complete= False
         self._devices = []
+        self._setup_time= None
 
     # Get access token for each user name
     def get_access_token(self, user_id):
@@ -93,6 +94,7 @@ class Supervisor(object):
         print("{} user{} with {} device{} ({} total device{}) have been created.".format(
             self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3))
         self._setup_complete= True
+        self._setup_time=time.time()
 
     def start(self):
         logger.info('Starting...')
@@ -127,6 +129,10 @@ class Supervisor(object):
                 if not alive_devices:
                     logger.info('No alive devices left.')
                     break
+                # Check if 10 minutes elapsed
+                if self._setup_time:
+                    if time.time()-self._setup_time>60*10:
+                        break
 
         except KeyboardInterrupt:
             logger.info('Warm shutdown request by Ctrl-C. '
