@@ -77,6 +77,9 @@ class Supervisor(object):
             for i in range(self._ndevices):
                 # TODO: Maybe implement random delay for each device
                 #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
+                low_bound=self._device_kwargs["delay"]-self._device_kwargs["delay"]/20
+                high_bound=self._device_kwargs["delay"]+self._device_kwargs["delay"]/20
+                self._device_kwargs["delay"] = random.uniform(low_bound,high_bound)
                 device = Device(thread_index=j, **self._device_kwargs, user_id=user_id)
                 j = j+1
                 device.setDaemon(True)

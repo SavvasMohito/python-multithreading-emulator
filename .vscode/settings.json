@@ -1,3 +1,12 @@
 {
-	"python.defaultInterpreterPath": "python3"
+	"python.defaultInterpreterPath": "python3",
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/metrics": true
+	},
+	"explorerExclude.backup": null
 }

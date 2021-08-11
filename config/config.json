@@ -3,5 +3,5 @@
   "devices": 5000,
   "url": "/api/data",
   "device_name": "iot-device-",
-  "delay": 2
+  "delay": 10
 }
