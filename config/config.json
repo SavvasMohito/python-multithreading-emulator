@@ -1,7 +1,7 @@
 {
-  "users": 1,
-  "devices": 5000,
+  "users": 10,
+  "devices": 100,
   "url": "/api/data",
   "device_name": "iot-device-",
-  "delay": 10
+  "delay": 5
 }
