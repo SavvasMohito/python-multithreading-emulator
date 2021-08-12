@@ -135,7 +135,7 @@ class Device(threading.Thread):
     def run(self):
         req_session = Session()
         req_session.verify = 'cert.pem'
-        tls_resumption=False
+        tls_resumption=True
         while not self._supervisor.is_setup_complete:
             time.sleep(self._delay)
         try:

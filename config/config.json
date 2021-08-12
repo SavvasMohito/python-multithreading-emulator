@@ -1,7 +1,7 @@
 {
   "users": 10,
   "devices": 50,
-  "url": "/orion",
+  "url": "/api/data",
   "device_name": "iot-device-",
   "delay": 5
 }

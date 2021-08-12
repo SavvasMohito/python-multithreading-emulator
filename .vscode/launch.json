@@ -18,7 +18,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/src/run_without_scripts.py",
 			"console": "integratedTerminal",
-			"env": {"NGINX_HOST_CONFIG":"172.24.1.14"}
+			"env": {"NGINX_HOST_CONFIG":"10.68.51.15"}
 		},
 		{
 			"name": "Register Users",
