@@ -9,14 +9,16 @@
 			"type": "python",
 			"request": "launch",
 			"program": "${workspaceFolder}/src/run.py",
-			"console": "integratedTerminal"
+			"console": "integratedTerminal",
+			"env": {"NGINX_HOST_CONFIG":"10.68.51.15"}
 		},
 		{
 			"name": "Emulator w/out Scripts",
 			"type": "python",
 			"request": "launch",
 			"program": "${workspaceFolder}/src/run_without_scripts.py",
-			"console": "integratedTerminal"
+			"console": "integratedTerminal",
+			"env": {"NGINX_HOST_CONFIG":"172.24.1.14"}
 		},
 		{
 			"name": "Register Users",
