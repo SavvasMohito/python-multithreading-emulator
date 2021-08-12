@@ -32,6 +32,9 @@ if (os.path.exists('config/registeredUsers.json')):
     userCollection = localClient["iotUsers"]["users"]
     deviceCollection = localClient["iotUsers"]["devices"]
 
+    # delete orion
+    localClient.drop_database("orion")
+    
     # Load registered users' info
     userCredentials=[]
     with open('config/registeredUsers.json', 'r') as infile:

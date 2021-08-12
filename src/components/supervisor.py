@@ -121,7 +121,7 @@ class Supervisor(object):
             spawner.start()
 
             while True:
-                time.sleep(1)
+                time.sleep(10)
                 alive_devices = len([d for d in self._devices if d.is_alive()])
                 logger.info(
                     'Alive devices: %d', alive_devices)
@@ -131,7 +131,7 @@ class Supervisor(object):
                     break
                 # Check if 10 minutes elapsed
                 if self._setup_time:
-                    if time.time()-self._setup_time>60*10:
+                    if time.time()-self._setup_time>10*60:
                         break
 
         except KeyboardInterrupt:
