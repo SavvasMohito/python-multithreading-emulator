@@ -5,7 +5,8 @@ import random
 import threading
 import time
 
-from requests import Session
+from requests import Session,request
+import requests
 from metrics import save_device_metric
 
 __all__ = ['Device']
@@ -26,20 +27,44 @@ class Device(threading.Thread):
         self._device = None
         self._downtime_start = None
         self._user_id = user_id
+        self._registered=False
 
-    def _send_data(self,req_session:Session):
-        body = {"id": self._device_name,
-                "temp": random.randint(10, 15)}
+    def _send_data(self,req_session:Session,tls_resumption:bool):
+        if not self._registered:
+            body = {
+                "id": self._device_name,
+                "type": "tempsensor",
+                "temp": {
+                    "type": "Number",
+                    "value":random.randint(10, 15)
+                }
+            }
+            req_endpoint="/v2/entities"
+            req_method="POST"
+        else:
+            body = {
+                "temp": {
+                    "value":random.randint(10, 15)
+                }
+            }
+            req_endpoint="/v2/entities/{}/attrs".format(self._device_name)
+            req_method="PATCH"
+
+        # body = {"id": self._device_name,
+        #         "temp": random.randint(10, 15)}
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer {}'.format(self._access_token)}
         try:
             msg_start = time.time()
-
-            response = req_session.post(
-                "{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers,timeout=20)
-
+            
+            if tls_resumption:
+                response =req_session.request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
+            else:
+                response = request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers, verify="cert.pem",timeout=20)
             # Message sent successfully
-            if (response.status_code == 200):
+            if response.status_code in [200,201,204]:
+                self._registered=True
+            #if (response.status_code == 200):
                 # recover from downtime
                 if self._downtime_start:
                     down_time_end = time.time()
@@ -58,16 +83,24 @@ class Device(threading.Thread):
                                     'DURATION': msg_time,
                                     'RESPONSE_CODE': response.status_code,
                                     'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+            elif (response.status_code == 422):
+                # device already registered
+                self._registered=True
             elif (response.status_code == 403):
                 # tripping here
-                response = req_session.post("{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers)
+                if tls_resumption:
+                    response = req_session.post("{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers)
+                else:
+                    response = requests.post("{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
                 if (response.status_code == 200):
                     old_access_token = self._access_token
                     self._access_token = response.text
                     headers = {'Content-Type': 'application/json',
                                'Authorization': 'Bearer {}'.format(self._access_token)}
-                    # retry transmission
-                    response = req_session.post("{}{}".format(self._url, "/v2/entities"), data=json.dumps(body), headers=headers)
+                    if tls_resumption:
+                        response =req_session.request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
+                    else:
+                        response =request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
                     # try new access token before overwritting previous one
                     if (response.status_code != 200):
                         msg = "Token failed. Reason: {}".format(response.text)
@@ -102,11 +135,12 @@ class Device(threading.Thread):
     def run(self):
         req_session = Session()
         req_session.verify = 'cert.pem'
+        tls_resumption=True
         while not self._supervisor.is_setup_complete:
             time.sleep(self._delay)
         try:
             while self._supervisor.is_running:
-                self._send_data(req_session)
+                self._send_data(req_session,tls_resumption)
                 time.sleep(self._delay)
 
         except(Exception):

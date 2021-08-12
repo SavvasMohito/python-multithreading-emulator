@@ -34,6 +34,7 @@ class Supervisor(object):
         self._is_running = False
         self._setup_complete= False
         self._devices = []
+        self._setup_time= None
 
     # Get access token for each user name
     def get_access_token(self, user_id):
@@ -76,7 +77,7 @@ class Supervisor(object):
             self._device_kwargs["access_token"] = user_identity["user_token"]
             for i in range(self._ndevices):
                 # TODO: Maybe implement random delay for each device
-                # random delay range=
+                #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
                 low_bound=self._device_kwargs["delay"]-self._device_kwargs["delay"]/20
                 high_bound=self._device_kwargs["delay"]+self._device_kwargs["delay"]/20
                 self._device_kwargs["delay"] = random.uniform(low_bound,high_bound)
@@ -93,6 +94,7 @@ class Supervisor(object):
         print("{} user{} with {} device{} ({} total device{}) have been created.".format(
             self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3))
         self._setup_complete= True
+        self._setup_time=time.time()
 
     def start(self):
         logger.info('Starting...')
@@ -119,7 +121,7 @@ class Supervisor(object):
             spawner.start()
 
             while True:
-                time.sleep(1)
+                time.sleep(10)
                 alive_devices = len([d for d in self._devices if d.is_alive()])
                 logger.info(
                     'Alive devices: %d', alive_devices)
@@ -127,6 +129,10 @@ class Supervisor(object):
                 if not alive_devices:
                     logger.info('No alive devices left.')
                     break
+                # Check if 10 minutes elapsed
+                if self._setup_time:
+                    if time.time()-self._setup_time>10*60:
+                        break
 
         except KeyboardInterrupt:
             logger.info('Warm shutdown request by Ctrl-C. '

@@ -93,9 +93,8 @@ for user_identity in userCredentials:
   # Add registered user in list
   storeCredentials.append({
     "user_token":token["access_token"],
-    "user_id":json_res['identity']['id']
+    "user_id":user_identity["user_id"]
   })
-
 
   # Add users and their tokens in mongo
   userEntry = {}
