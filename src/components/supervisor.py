@@ -134,7 +134,7 @@ class Supervisor(object):
                     break
                 # Check if 10 minutes elapsed
                 if self._setup_time:
-                    if time.time()-self._setup_time>10*60:
+                    if time.time()-self._setup_time>20*60:
                         break
 
         except KeyboardInterrupt:
