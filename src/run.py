@@ -7,7 +7,7 @@ from time import time
 from components.supervisor import Supervisor
 from metrics import save_script_metric
 
-NGINX_URL=os.getenv('NGINX_HOST_CONFIG')
+NGINX_URL = os.getenv('NGINX_HOST_CONFIG')
 
 script_list = ['delete_emulation_users.py',
                'register_users.py', 'login_get_access_tokens.py']
@@ -24,9 +24,11 @@ def get_arguments():
         args = [
             config["users"],
             config["devices"],
-            'https://{}{}'.format(NGINX_URL,config["url"]),
+            'https://{}{}'.format(NGINX_URL, config["url"]),
             config["device_name"],
             config["delay"],
+            config["minutes_duration"],
+            config["tls"]
         ]
     except Exception:
         logging.info(Exception)

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(filename='supervisor.log', encoding='utf-8', level=logging.INFO)
 
 class Supervisor(object):
-    def __init__(self, nusers, ndevices, url, device_name, delay=1.):
+    def __init__(self, nusers, ndevices, url, device_name, delay, minutes_duration, tls):
 
         self._nusers = nusers
         self._ndevices = ndevices
@@ -30,12 +30,14 @@ class Supervisor(object):
             'supervisor': self,
             # Maybe add this in the future
             # 'message_payload': message_payload,
-            'delay': delay
+            'delay': delay,
+            'tls': tls
         }
         self._is_running = False
         self._setup_complete= False
         self._devices = []
         self._setup_time= None
+        self.minutes_duration = minutes_duration
 
     # Get access token for each user name
     def get_access_token(self, user_id):
@@ -134,7 +136,7 @@ class Supervisor(object):
                     break
                 # Check if 10 minutes elapsed
                 if self._setup_time:
-                    if time.time()-self._setup_time>20*60:
+                    if time.time()-self._setup_time>self.minutes_duration*60:
                         break
 
         except KeyboardInterrupt:

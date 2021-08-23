@@ -16,7 +16,7 @@ random.seed()
 
 class Device(threading.Thread):
 
-    def __init__(self, supervisor, url, device_name, thread_index, access_token=None, delay=1., user_id=None):
+    def __init__(self, supervisor, url, device_name, thread_index, access_token=None, delay=1., user_id=None, tls=True):
         threading.Thread.__init__(self, name='Device_%s' % thread_index)
 
         self._supervisor = supervisor
@@ -27,9 +27,10 @@ class Device(threading.Thread):
         self._device = None
         self._downtime_start = None
         self._user_id = user_id
-        self._registered=False
+        self._registered = False
+        self._tls = tls
 
-    def _send_data(self,req_session:Session,tls_resumption:bool):
+    def _send_data(self,req_session:Session):
         if not self._registered:
             body = {
                 "id": self._device_name,
@@ -57,7 +58,7 @@ class Device(threading.Thread):
         try:
             msg_start = time.time()
             
-            if tls_resumption:
+            if self._tls:
                 response =req_session.request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
             else:
                 response = request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers, verify="cert.pem",timeout=20)
@@ -88,7 +89,7 @@ class Device(threading.Thread):
                 self._registered=True
             elif (response.status_code == 403):
                 # tripping here
-                if tls_resumption:
+                if self._tls:
                     response = req_session.post("{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers)
                 else:
                     response = requests.post("{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers, verify="cert.pem")
@@ -97,7 +98,7 @@ class Device(threading.Thread):
                     self._access_token = response.text
                     headers = {'Content-Type': 'application/json',
                                'Authorization': 'Bearer {}'.format(self._access_token)}
-                    if tls_resumption:
+                    if self._tls:
                         response =req_session.request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
                     else:
                         response =request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
@@ -135,12 +136,11 @@ class Device(threading.Thread):
     def run(self):
         req_session = Session()
         req_session.verify = 'cert.pem'
-        tls_resumption=True
         while not self._supervisor.is_setup_complete:
             time.sleep(self._delay)
         try:
             while self._supervisor.is_running:
-                self._send_data(req_session,tls_resumption)
+                self._send_data(req_session)
                 time.sleep(self._delay)
 
         except(Exception):
