@@ -6,6 +6,7 @@ import threading
 import time
 import urllib.request
 
+import numpy as np
 from metrics import create_user_metrics_folder, save_script_metric
 from pymongo import MongoClient
 
@@ -80,7 +81,9 @@ class Supervisor(object):
                 #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
                 low_bound=self._device_kwargs["delay"]-self._device_kwargs["delay"]/20
                 high_bound=self._device_kwargs["delay"]+self._device_kwargs["delay"]/20
-                self._device_kwargs["delay"] = random.uniform(low_bound,high_bound)
+                #self._device_kwargs["delay"] = random.uniform(low_bound,high_bound)
+                # switch from fixed delay to poison delay
+                self._device_kwargs["delay"] =np.random.poisson(1/24, 1/6)
                 device = Device(thread_index=j, **self._device_kwargs, user_id=user_id)
                 j = j+1
                 device.setDaemon(True)

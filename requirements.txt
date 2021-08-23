@@ -6,3 +6,4 @@ ory-hydra-client
 prometheus_client
 pandas
 matplotlib
+numpy
