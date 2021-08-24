@@ -72,6 +72,9 @@ class Supervisor(object):
         logger.info('Creating Devices...')
         userCredentials = []
         j = 0
+        population = [0, 1, 2]
+        weights = [0.25, 0.5, 0.25]
+        ranges = [(6, 11), (12, 20), (21, 24)]
         with open('config/remoteEmulatorUsers.json', 'r') as infile:
             userCredentials = json.load(infile)
         for user_identity in userCredentials:
@@ -85,7 +88,10 @@ class Supervisor(object):
                 high_bound=self._device_kwargs["delay"]+self._device_kwargs["delay"]/20
                 #self._device_kwargs["delay"] = random.uniform(low_bound,high_bound)
                 # switch from fixed delay to poison delay
-                self._device_kwargs["delay"] =np.random.poisson(1/24, 1/6)
+                # self._device_kwargs["delay"] = np.random.poisson(1//24, 1//6)
+                # switch from not working poisson to Savvas' custom poisson
+                r = random.choices(population, weights)
+                self._device_kwargs["delay"] = 1 / (random.randint(ranges[r[0]][0], ranges[r[0]][1]) / 60)
                 device = Device(thread_index=j, **self._device_kwargs, user_id=user_id)
                 j = j+1
                 device.setDaemon(True)
