@@ -90,8 +90,8 @@ class Supervisor(object):
                 # switch from fixed delay to poison delay
                 # self._device_kwargs["delay"] = np.random.poisson(1//24, 1//6)
                 # switch from not working poisson to Savvas' custom poisson
-                r = random.choices(population, weights)
-                self._device_kwargs["delay"] = 1 / (random.randint(ranges[r[0]][0], ranges[r[0]][1]) / 60)
+                r = random.choices(population, weights)[0]
+                self._device_kwargs["delay"] = 1 / (random.randint(ranges[r][0], ranges[r][1]) / 60)
                 device = Device(thread_index=j, **self._device_kwargs, user_id=user_id)
                 j = j+1
                 device.setDaemon(True)
