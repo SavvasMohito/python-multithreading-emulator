@@ -44,6 +44,7 @@ class Device(threading.Thread):
             req_method="POST"
         else:
             body = {
+                "id": self._device_name,
                 "temp": {
                     "value":random.randint(10, 15)
                 }
@@ -89,6 +90,7 @@ class Device(threading.Thread):
                 self._registered=True
             elif (response.status_code == 403):
                 # tripping here
+                msg_start = time.time()
                 if self._tls:
                     response = req_session.post("{}{}".format(self._url, "/getNewToken"), data=json.dumps(body), headers=headers)
                 else:
@@ -98,12 +100,13 @@ class Device(threading.Thread):
                     self._access_token = response.text
                     headers = {'Content-Type': 'application/json',
                                'Authorization': 'Bearer {}'.format(self._access_token)}
+                    
                     if self._tls:
                         response =req_session.request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
                     else:
                         response =request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
                     # try new access token before overwritting previous one
-                    if (response.status_code != 200):
+                    if response.status_code not in [200,201,204]:
                         msg = "Token failed. Reason: {}".format(response.text)
                         #print(msg)
                         save_device_metric({'EVENT': msg,
@@ -112,7 +115,17 @@ class Device(threading.Thread):
                                             'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
                         # race condition in typescript
                         # 'Access Token invalid or expired.'
+                        print("major failure device:{} user:{}".format(self._device_name,self._user_id))
                         self._access_token = old_access_token
+                    else:
+                        msg_end = time.time()
+                        msg_time = '{0:.5f}'.format(msg_end - msg_start)
+                        #print("Message sent successfully in {} seconds.".format(msg_time))
+                        save_device_metric({'EVENT': 'Refresh token and resend message',
+                                    'DURATION': msg_time,
+                                    'RESPONSE_CODE': response.status_code,
+                                    'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+                        
                 else:
                     # set state to downtime
                     self._downtime_start = time.time()
