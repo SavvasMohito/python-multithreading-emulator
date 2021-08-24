@@ -5,6 +5,8 @@ import random
 import threading
 import time
 import urllib.request
+from zipfile import ZipFile
+from os.path import basename
 
 import numpy as np
 from metrics import create_user_metrics_folder, save_script_metric
@@ -143,6 +145,17 @@ class Supervisor(object):
                 # Check if 10 minutes elapsed
                 if self._setup_time:
                     if time.time()-self._setup_time>self.minutes_duration*60:
+
+                        # zip metrics files
+                        # create a ZipFile object
+                        with ZipFile('test_{}.zip'.format(str(time.time_ns()), 'w') as zipObj:
+                        # Iterate over all the files in directory
+                        for folderName, subfolders, filenames in os.walk("metrics"):
+                            for filename in filenames:
+                                #create complete filepath of file in directory
+                                filePath = os.path.join(folderName, filename)
+                                # Add file to zip
+                                zipObj.write(filePath, basename(filePath))
                         break
 
         except KeyboardInterrupt:
