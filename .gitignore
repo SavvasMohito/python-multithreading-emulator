@@ -116,3 +116,4 @@ metrics
 
 # Standalone simulator file
 config/remoteEmulatorUsers.json
+*.zip

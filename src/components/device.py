@@ -81,7 +81,7 @@ class Device(threading.Thread):
                 msg_end = time.time()
                 msg_time = '{0:.5f}'.format(msg_end - msg_start)
                 #print("Message sent successfully in {} seconds.".format(msg_time))
-                save_device_metric({'EVENT': 'Message sent',
+                save_device_metric({'EVENT': 'NT',
                                     'DURATION': msg_time,
                                     'RESPONSE_CODE': response.status_code,
                                     'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
@@ -121,7 +121,7 @@ class Device(threading.Thread):
                         msg_end = time.time()
                         msg_time = '{0:.5f}'.format(msg_end - msg_start)
                         #print("Message sent successfully in {} seconds.".format(msg_time))
-                        save_device_metric({'EVENT': 'Refresh token and resend message',
+                        save_device_metric({'EVENT': 'RT',
                                     'DURATION': msg_time,
                                     'RESPONSE_CODE': response.status_code,
                                     'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
@@ -132,14 +132,14 @@ class Device(threading.Thread):
                     # device gets new token that is invalid
                     msg = "Packet lost. Reason: {}".format(response.text)
                     #print(msg)
-                    save_device_metric({'EVENT': msg,
+                    save_device_metric({'EVENT': 'PL',
                                         'DURATION': '',
                                         'RESPONSE_CODE': response.status_code,
                                         'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
             else:
                 msg = "Error: Unhandled response.status_code"
                 #print(msg)
-                save_device_metric({'EVENT': msg,
+                save_device_metric({'EVENT': 'PL',
                                     'DURATION': '',
                                     'RESPONSE_CODE': response.status_code,
                                     'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
