@@ -8,7 +8,6 @@ services:
       context: .
       dockerfile: .devcontainer/Dockerfile
       network: host
-    # TODO : add users file with id,token
     command: python src/run_without_scripts.py
     #command: /bin/sh -c "while sleep 1000; do :; done"
     environment:
@@ -18,4 +17,9 @@ services:
         source: .
         target: /usr/src/app
         consistency: cached
+  device-emulator-production:
+    image: device-emulator-production
+    build:
+      context: .
+      dockerfile: Dockerfile
 
