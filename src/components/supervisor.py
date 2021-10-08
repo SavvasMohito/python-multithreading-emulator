@@ -147,7 +147,7 @@ class Supervisor(object):
                     if time.time() - self._setup_time>self.minutes_duration * 60:
                         # zip zip zip
                         # create a ZipFile object
-                        with ZipFile('./metrics_archive/metrics_{}.zip'.format(str(time.time_ns())), 'w') as zipObj:
+                        with ZipFile('./metrics_archive/metrics_{}.zip'.format(str(time.strftime("%Y-%m-%d-%H-%M"))), 'w') as zipObj:
                             # Iterate over all the files in directory
                             for folderName, subfolders, filenames in os.walk("metrics"):
                                 for filename in filenames:
