@@ -4,6 +4,6 @@
   "url": "/api/data",
   "device_name": "iot-device-",
   "delay": 20,
-  "minutes_duration": 10,
+  "minutes_duration": 240,
   "tls": true
 }
