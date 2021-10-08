@@ -9,7 +9,7 @@ from zipfile import ZipFile
 from os.path import basename
 
 import numpy as np
-from metrics import create_user_metrics_folder, save_script_metric
+from metrics import create_user_metrics_folder
 from pymongo import MongoClient
 
 from .device import Device
@@ -129,7 +129,6 @@ class Supervisor(object):
             devTotal = devEnd - devStart
             print("Access Token distribution for {} user{} with {} device{} ({} total device{}) finished in {} seconds.".format(
                 self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3, devTotal))
-            save_script_metric({'SCRIPT_NAME': 'access_token_distribution', 'SCRIPT_TIME': devTotal})
             spawner.setDaemon(True)
             spawner.start()
 

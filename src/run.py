@@ -5,7 +5,7 @@ import subprocess
 from time import time
 
 from components.supervisor import Supervisor
-from metrics import save_script_metric
+from metrics import create_folders
 
 NGINX_URL = os.getenv('NGINX_HOST_CONFIG')
 
@@ -20,7 +20,6 @@ def get_arguments():
         file = open('config/config.json', 'r')
         config = json.load(file)
         file.close()
-        # TODO: change config URL
         args = [
             config["users"],
             config["devices"],
@@ -45,8 +44,8 @@ def main():
         subprocess.call(['python3', "src/scripts/{}".format(script)])
         end_time = time()
         total_time = '{0:.3f}'.format(end_time - start_time)
-        save_script_metric({'SCRIPT_NAME': script, 'SCRIPT_TIME': total_time})
         print("Finished in {} seconds.".format(total_time))
+        create_folders()
 
     # Setup supervisor for all devices for all users
     if get_arguments() is not False:
