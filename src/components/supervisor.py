@@ -30,8 +30,6 @@ class Supervisor(object):
             'access_token': None,
             'device_name': device_name,
             'supervisor': self,
-            # Maybe add this in the future
-            # 'message_payload': message_payload,
             'delay': delay,
             'tls': tls
         }
@@ -39,7 +37,12 @@ class Supervisor(object):
         self._setup_complete= False
         self._devices = []
         self._setup_time= None
-        self.minutes_duration = minutes_duration
+        self._minutes_duration = minutes_duration
+        self._sp = [
+            "s" if self._nusers > 1 else "",
+            "s" if self._ndevices > 1 else "",
+            "s" if self._nusers*self._ndevices > 1 else ""
+        ]
 
     # Get access token for each user name
     def get_access_token(self, user_id):
@@ -84,14 +87,7 @@ class Supervisor(object):
             create_user_metrics_folder(user_id)
             self._device_kwargs["access_token"] = user_identity["user_token"]
             for i in range(self._ndevices):
-                # TODO: Maybe implement random delay for each device
-                #self._device_kwargs["delay"] += random.uniform(0.1, 0.5)
-                low_bound=self._device_kwargs["delay"]-self._device_kwargs["delay"]/20
-                high_bound=self._device_kwargs["delay"]+self._device_kwargs["delay"]/20
-                #self._device_kwargs["delay"] = random.uniform(low_bound,high_bound)
-                # switch from fixed delay to poison delay
-                # self._device_kwargs["delay"] = np.random.poisson(1//24, 1//6)
-                # switch from not working poisson to Savvas' custom poisson
+                # switch from fixed delay to Savvas' custom poisson delay
                 r = random.choices(population, weights)[0]
                 self._device_kwargs["delay"] = 1 / (random.randint(ranges[r][0], ranges[r][1]) / 60)
                 device = Device(thread_index=j, **self._device_kwargs, user_id=user_id)
@@ -101,11 +97,7 @@ class Supervisor(object):
                 self._devices.append(device)
 
         logger.info('%d device(s) have been created.' % self._ndevices)
-        s1 = "s" if self._nusers > 1 else ""
-        s2 = "s" if self._ndevices > 1 else ""
-        s3 = "s" if self._nusers*self._ndevices > 1 else ""
-        print("{} user{} with {} device{} ({} total device{}) have been created.".format(
-            self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3))
+        print("{} user{} with {} device{} ({} total device{}) have been created.".format(self._nusers, self._sp[0], self._ndevices, self._sp[1], self._nusers*self._ndevices, self._sp[2]))
         self._setup_complete= True
         self._setup_time=time.time()
 
@@ -115,20 +107,13 @@ class Supervisor(object):
         self._is_running = True
         try:
             # Retrieve ssl certificate from the http /download endpoint
-            urllib.request.urlretrieve(
-                "http://{}/download".format(NGINX_URL), "cert.pem")
-
+            urllib.request.urlretrieve("http://{}/download".format(NGINX_URL), "cert.pem")
             # Create the device spawner thread
             devStart = time.time()
-            spawner = threading.Thread(
-                target=self._create_devices, name='Spawner')
+            spawner = threading.Thread(target=self._create_devices, name='Spawner')
             devEnd = time.time()
-            s1 = "s" if self._nusers > 1 else ""
-            s2 = "s" if self._ndevices > 1 else ""
-            s3 = "s" if self._nusers*self._ndevices > 1 else ""
             devTotal = devEnd - devStart
-            print("Access Token distribution for {} user{} with {} device{} ({} total device{}) finished in {} seconds.".format(
-                self._nusers, s1, self._ndevices, s2, self._nusers*self._ndevices, s3, devTotal))
+            print("Access Token distribution for {} device{} finished in {} seconds.".format(self._nusers*self._ndevices, self._sp[2], devTotal))
             spawner.setDaemon(True)
             spawner.start()
 
@@ -141,16 +126,15 @@ class Supervisor(object):
                 if not alive_devices:
                     logger.info('No alive devices left.')
                     break
-                # Check if 10 minutes elapsed
+                # Check if experiment duration elapsed
                 if self._setup_time:
-                    if time.time() - self._setup_time>self.minutes_duration * 60:
-                        # zip zip zip
-                        # create a ZipFile object
+                    if time.time() - self._setup_time>self._minutes_duration * 60:
+                        # Create a ZipFile object
                         with ZipFile('./metrics_archive/metrics_{}.zip'.format(str(time.strftime("%Y_%m_%d_%H_%M"))), 'w') as zipObj:
                             # Iterate over all the files in directory
                             for folderName, subfolders, filenames in os.walk("metrics"):
                                 for filename in filenames:
-                                    #create complete filepath of file in directory
+                                    # Create complete filepath of file in directory
                                     filePath = os.path.join(folderName, filename)
                                     # Add file to zip
                                     zipObj.write(filePath, basename(filePath))
