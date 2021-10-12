@@ -8,7 +8,6 @@ import urllib.request
 from zipfile import ZipFile
 from os.path import basename
 
-import numpy as np
 from metrics import create_user_metrics_folder
 from pymongo import MongoClient
 
