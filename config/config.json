@@ -1,9 +1,9 @@
 {
   "users": 1,
-  "devices": 1,
+  "devices": 3,
   "url": "/api/data",
   "device_name": "iot-device-",
-  "delay": 20,
+  "delay": 4,
   "minutes_duration": 240,
   "tls": true
 }

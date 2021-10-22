@@ -55,7 +55,8 @@ class Device(threading.Thread):
         # body = {"id": self._device_name,
         #         "temp": random.randint(10, 15)}
         headers = {'Content-Type': 'application/json',
-                   'Authorization': 'Bearer {}'.format(self._access_token)}
+                   'Authorization': 'Bearer {}'.format(self._access_token),
+                   'Fiware-ServicePath': '/{}'.format(self._device_name)}
         try:
             msg_start = time.time()
             
@@ -99,7 +100,8 @@ class Device(threading.Thread):
                     old_access_token = self._access_token
                     self._access_token = response.text
                     headers = {'Content-Type': 'application/json',
-                               'Authorization': 'Bearer {}'.format(self._access_token)}
+                               'Authorization': 'Bearer {}'.format(self._access_token),
+                               'Fiware-ServicePath': '/{}'.format(self._device_name)}
                     
                     if self._tls:
                         response =req_session.request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)

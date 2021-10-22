@@ -115,3 +115,6 @@ localClient.close()
 # End of registration. Store users in file
 with open('config/remoteEmulatorUsers.json', 'w') as outfile:
     json.dump(storeCredentials,outfile, indent=2, sort_keys=True)
+
+with open('/var/lib/cert-storage/remoteEmulatorUsers.json', 'w') as outfile:
+    json.dump(storeCredentials,outfile, indent=2, sort_keys=True)

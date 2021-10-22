@@ -8,8 +8,8 @@ services:
       context: .
       dockerfile: .devcontainer/Dockerfile
       network: host
-    command: python src/run_without_scripts.py
-    #command: /bin/sh -c "while sleep 1000; do :; done"
+    #command: python src/run_without_scripts.py
+    command: /bin/sh -c "while sleep 1000; do :; done"
     environment:
       - NGINX_HOST_CONFIG=${NGINX_HOST_CONFIG}
     volumes:

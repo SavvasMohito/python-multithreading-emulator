@@ -74,6 +74,7 @@ class Supervisor(object):
 
     def _create_devices(self):
         logger.info('Creating Devices...')
+        device_delays = {}
         userCredentials = []
         j = 0
         population = [0, 1, 2]
@@ -88,12 +89,18 @@ class Supervisor(object):
             for i in range(self._ndevices):
                 # switch from fixed delay to Savvas' custom poisson delay
                 r = random.choices(population, weights)[0]
-                self._device_kwargs["delay"] = 1 / (random.randint(ranges[r][0], ranges[r][1]) / 60)
+                delay = 1 / (random.randint(ranges[r][0], ranges[r][1]) / 60)
+                self._device_kwargs["delay"] = delay
                 device = Device(thread_index=j, **self._device_kwargs, user_id=user_id)
+                # save delay for mitigation
+                device_delays[self._device_kwargs["device_name"] + str(j)] = delay
                 j = j+1
                 device.setDaemon(True)
                 device.start()
                 self._devices.append(device)
+        # move device delays in json file
+        with open('/var/lib/cert-storage/delays.json', 'w') as fp:
+            json.dump(device_delays, fp)
 
         logger.info('%d device(s) have been created.' % self._ndevices)
         print("{} user{} with {} device{} ({} total device{}) have been created.".format(self._nusers, self._sp[0], self._ndevices, self._sp[1], self._nusers*self._ndevices, self._sp[2]))

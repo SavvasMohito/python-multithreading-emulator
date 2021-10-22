@@ -12,6 +12,12 @@ configuration = ory_kratos_client.Configuration(
     host="172.24.1.4:4434"
 )
 
+blacklist = '/var/lib/cert-storage/blacklist.json'
+#if (not os.path.exists(blacklist)):
+with open(blacklist, 'w') as f:
+    json.dump([], f)
+os.chmod(blacklist, 0o777)
+
 if (os.path.exists('metrics')):
     shutil.rmtree('metrics')
 
