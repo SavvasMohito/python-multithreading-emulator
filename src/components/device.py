@@ -29,6 +29,7 @@ class Device(threading.Thread):
         self._user_id = user_id
         self._registered = False
         self._tls = tls
+        self._servicePath = "/{}".format(self._device_name)
 
     def _send_data(self,req_session:Session):
         if not self._registered:
@@ -56,7 +57,7 @@ class Device(threading.Thread):
         #         "temp": random.randint(10, 15)}
         headers = {'Content-Type': 'application/json',
                    'Authorization': 'Bearer {}'.format(self._access_token),
-                   'Fiware-ServicePath': '/{}'.format(self._device_name)}
+                   'Fiware-ServicePath': self._servicePath}
         try:
             msg_start = time.time()
             
@@ -101,7 +102,7 @@ class Device(threading.Thread):
                     self._access_token = response.text
                     headers = {'Content-Type': 'application/json',
                                'Authorization': 'Bearer {}'.format(self._access_token),
-                               'Fiware-ServicePath': '/{}'.format(self._device_name)}
+                               'Fiware-ServicePath': self._servicePath}
                     
                     if self._tls:
                         response =req_session.request(req_method,"{}{}".format(self._url, req_endpoint), data=json.dumps(body), headers=headers,timeout=20)
@@ -138,6 +139,10 @@ class Device(threading.Thread):
                                         'DURATION': '',
                                         'RESPONSE_CODE': response.status_code,
                                         'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+            elif (response.status_code == 426):
+                if (self._servicePath != response.text):
+                    self._servicePath = response.text
+                    self._registered = False
             else:
                 msg = "Error: Unhandled response.status_code"
                 #print(msg)
