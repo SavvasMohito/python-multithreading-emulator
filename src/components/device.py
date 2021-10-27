@@ -30,6 +30,13 @@ class Device(threading.Thread):
         self._registered = False
         self._tls = tls
         self._servicePath = "/{}".format(self._device_name)
+        self._cloneStart = None
+
+    def _save_metric(self, event, duration, response):
+        save_device_metric({'EVENT': event,
+                            'DURATION': duration,
+                            'RESPONSE_CODE': response,
+                            'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
 
     def _send_data(self, req_session: Session):
         if not self._registered:
@@ -72,21 +79,14 @@ class Device(threading.Thread):
                 # recover from downtime
                 if self._downtime_start:
                     down_time_end = time.time()
-                    down_time = '{0:.5f}'.format(
-                        down_time_end - self._downtime_start)
+                    down_time = '{0:.5f}'.format(down_time_end - self._downtime_start)
                     #print("Device recovered after {} seconds of downtime.".format(down_time))
-                    save_device_metric({'EVENT': 'Device Recovered',
-                                        'DURATION': down_time,
-                                        'RESPONSE_CODE': response.status_code,
-                                        'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+                    self._save_metric('Device Recovered', down_time, response.status_code)
                     self._downtime_start = None
                 msg_end = time.time()
                 msg_time = '{0:.5f}'.format(msg_end - msg_start)
                 #print("Message sent successfully in {} seconds.".format(msg_time))
-                save_device_metric({'EVENT': 'NT',
-                                    'DURATION': msg_time,
-                                    'RESPONSE_CODE': response.status_code,
-                                    'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+                self._save_metric('NT', msg_time, response.status_code)
             elif (response.status_code == 422):
                 # device already registered
                 self._registered = True
@@ -112,23 +112,24 @@ class Device(threading.Thread):
                     if response.status_code not in [200, 201, 204]:
                         msg = "Token failed. Reason: {}".format(response.text)
                         # print(msg)
-                        save_device_metric({'EVENT': msg,
-                                            'DURATION': '',
-                                            'RESPONSE_CODE': response.status_code,
-                                            'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+                        self._save_metric(msg, '', response.status_code)
                         # race condition in typescript
                         # 'Access Token invalid or expired.'
                         print("major failure device:{} user:{}".format(self._device_name, self._user_id))
                         self._access_token = old_access_token
                     else:
+                        if self._cloneStart:
+                            clone_time_end = time.time()
+                            clone_time = '{0:.5f}'.format(clone_time_end - self._cloneStart)
+                            #print("Device recovered after {} seconds of downtime.".format(down_time))
+                            self._save_metric('Replication_Penalty', clone_time, response.status_code)
+                            self._cloneStart = None
+
                         self._registered = True
                         msg_end = time.time()
                         msg_time = '{0:.5f}'.format(msg_end - msg_start)
                         #print("Message sent successfully in {} seconds.".format(msg_time))
-                        save_device_metric({'EVENT': 'RT',
-                                            'DURATION': msg_time,
-                                            'RESPONSE_CODE': response.status_code,
-                                            'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+                        self._save_metric('RT', msg_time, response.status_code)
 
                 else:
                     # set state to downtime
@@ -136,12 +137,10 @@ class Device(threading.Thread):
                     # device gets new token that is invalid
                     msg = "Packet lost. Reason: {}".format(response.text)
                     # print(msg)
-                    save_device_metric({'EVENT': 'PL',
-                                        'DURATION': '',
-                                        'RESPONSE_CODE': response.status_code,
-                                        'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+                    self._save_metric('PL', '', response.status_code)
             elif (response.status_code == 426):
                 if (self._servicePath != response.text):
+                    self._cloneStart = time.time()
                     self._servicePath = response.text
                     self._registered = False
                     with open('/var/lib/cert-storage/deviceInfo.json', 'r') as fp:
@@ -153,10 +152,7 @@ class Device(threading.Thread):
             else:
                 msg = "Error: Unhandled response.status_code"
                 # print(msg)
-                save_device_metric({'EVENT': 'PL',
-                                    'DURATION': '',
-                                    'RESPONSE_CODE': response.status_code,
-                                    'TIMESTAMP': datetime.datetime.now()}, self._device_name, self._user_id)
+                self._save_metric('PL', '', response.status_code)
         except(Exception) as e:
             logger.info("exception: {}".format(e))
 
