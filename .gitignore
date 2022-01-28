@@ -106,14 +106,3 @@ dist
 # Python Cache files
 __pycache__/
 *.py[cod]
-
-# SSL Certificate
-cert.pem
-config/registeredUsers.json
-
-# Metrics
-metrics
-
-# Standalone simulator file
-config/remoteEmulatorUsers.json
-*.zip

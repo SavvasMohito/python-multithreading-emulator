@@ -32,7 +32,4 @@ kubernetes
 *.tar.gz
 
 temp/** 
-metrics/**
-metrics_16*
-metrics_archive/**
 *.csv

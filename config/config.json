@@ -1,8 +1,6 @@
 {
   "threads": 2,
-  "url": "/api/data",
   "thread_name": "thread_",
   "delay": 4,
-  "minutes_duration": 240,
-  "tls": true
+  "minutes_duration": 240
 }
