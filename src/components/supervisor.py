@@ -11,17 +11,20 @@ logging.basicConfig(filename='supervisor.log', encoding='utf-8', level=logging.I
 
 class Supervisor(object):
     def __init__(self, nthreads, thread_name, delay, minutes_duration):
-
-        self._nthreads = nthreads
+       
+        # Threads' attributes
         self._thread_kwargs = {
             'thread_name': thread_name,
             'supervisor': self,
             'delay': delay,
         }
-        self._is_running = False
-        self._setup_complete= False
+
+        # Supervisor's attributes
         self._threads = []
-        self._setup_time= None
+        self._nthreads = nthreads
+        self._is_running = False
+        self._setup_complete = False
+        self._setup_time = None
         self._minutes_duration = minutes_duration
 
     # Return Supervisor's running state.
@@ -80,10 +83,10 @@ class Supervisor(object):
                 # Check if experiment duration elapsed
                 if self._setup_time:
                     if time.time() - self._setup_time > self._minutes_duration * 60:
-											# Stop the supervisor from running
-                      break
+					    # Stop the supervisor from running
+                        break
 
-				# User manual interruption 
+		# User manual interruption 
         except KeyboardInterrupt:
             logger.info('Warm shutdown request by Ctrl-C. '
                         'Press again to use force.')
