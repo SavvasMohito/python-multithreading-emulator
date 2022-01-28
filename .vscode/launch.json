@@ -5,69 +5,14 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Scripts & Emulator",
+			"name": "Run Emulator",
 			"type": "python",
 			"request": "launch",
 			"program": "${workspaceFolder}/src/run.py",
 			"console": "integratedTerminal",
-			"env": {"NGINX_HOST_CONFIG":"10.68.51.15"}
-		},
-		{
-			"name": "Emulator w/out Scripts",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/src/run_without_scripts.py",
-			"console": "integratedTerminal",
-			"env": {"NGINX_HOST_CONFIG":"10.68.51.15"}
-		},
-		{
-			"name": "Register Users",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/src/scripts/register_users.py",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "Login Users & get access tokens",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/src/scripts/login_get_access_tokens.py",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "List Identities",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/src/scripts/list_identities.py",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "Delete Users",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/src/scripts/delete_emulation_users.py",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "Test Data Collector",
-			"type": "node",
-			"request": "launch",
-			"program": "${workspaceFolder}/test-server.js",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "Prometheus Collector",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/src/others/test6.py",
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "Emulator Collector",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}/src/others/test7.py",
-			"console": "integratedTerminal"
+			"env": {
+				// Here you can set environmental variables for this specific run configuration.
+			}
 		}
 	]
 }

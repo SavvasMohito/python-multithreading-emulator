@@ -1,8 +1,7 @@
 {
-  "users": 1,
-  "devices": 2,
+  "threads": 2,
   "url": "/api/data",
-  "device_name": "iot_device_",
+  "thread_name": "thread_",
   "delay": 4,
   "minutes_duration": 240,
   "tls": true
