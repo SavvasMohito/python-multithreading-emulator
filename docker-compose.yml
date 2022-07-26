@@ -1,25 +1,22 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  device-emulator-standalone:
+  multithreading:
     image: device-emulator
-    container_name: device-emulator-standalone
+    container_name: multithreading
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
       network: host
     #command: python src/run_without_scripts.py
     command: /bin/sh -c "while sleep 1000; do :; done"
-    environment:
-      - NGINX_HOST_CONFIG=${NGINX_HOST_CONFIG}
     volumes:
       - type: bind
         source: .
         target: /usr/src/app
         consistency: cached
-  device-emulator-production:
-    image: device-emulator-production
+  multithreading-production:
+    image: multithreading-production
     build:
       context: .
       dockerfile: Dockerfile
-

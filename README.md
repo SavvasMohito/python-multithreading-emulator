@@ -1,4 +1,4 @@
-# Python Threading Device Emulator
+# Python Multithreading Template
 
 **NOTICE: Please do NOT modify this branch as it represents the clean version of the emulator. Create a new branch instead and start building it for your needs.**
 
