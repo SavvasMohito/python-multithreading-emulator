@@ -1,14 +1,12 @@
 # Python Multithreading Template
 
-**NOTICE: Please do NOT modify this branch as it represents the clean version of the emulator. Create a new branch instead and start building it for your needs.**
-
 This project is inspired by the [DeviceHive Python Device Simulator](https://github.com/devicehive/devicehive-python-device-simulator). It is a simpler project created with Python Threading for testing purposes and can fit all types of use cases, if configured appropriately.
 
-It is recommended to run it using a Docker Container in order to have all the required libraries and modules automatically installed. It can also be run locally if you do not want to use Docker, but you'll have to manually install all of the project dependencies.
+It is recommended to run it using a Docker container in order to have all the required libraries and modules automatically installed. It can also be run locally if you do not want to use Docker, but you'll have to manually install all the project dependencies.
 
 ## Configuration
 
-Inside the config folder you can find the config.json file which contains all the configuration attributes (described below) required for this project to work.
+In the config folder you can find the config.json file which contains all the configuration attributes (described below) required for this project to work.
 
 Feel free to modify this file based on your project needs. If you do so, please make sure to update the run.py, supervisor.py and thread.py files accordingly.
 
